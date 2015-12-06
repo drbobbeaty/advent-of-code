@@ -1,10 +1,10 @@
-# Mulder - The key to LenderX
+# advent-of-code
 
-_Mulder_ is the internally-accessible service for calling LenderX, and
-possibly other appraisal services. All appraisals will be held within
-Mulder so that clients can access this information regardless of what role
-they play in the workflow.
+Just my solutions to the problems at http://adventofcode.com
 
-<p  align="center">
-  <img src="doc/img/mulder.jpg" width="421" height="237" border="0" />
-</p>
+## License
+
+Copyright © 2015 Bob Beaty
+
+Distributed under the Eclipse Public License either version 1.0 or (at
+your option) any later version.
