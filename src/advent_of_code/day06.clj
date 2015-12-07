@@ -51,6 +51,6 @@
   up the lumens of the board - one light at a time. The `rule` is either the
   `elves` or `santa` for part 1 or 2 of the advent challenge."
   [plan rule]
-  (reduce + (map #(light % plan rule) (for [row (range 1000)
+  (reduce + (pmap #(light % plan rule) (for [row (range 1000)
                                              col (range 1000)]
                                          [row col]))))
