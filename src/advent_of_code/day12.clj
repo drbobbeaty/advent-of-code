@@ -10,7 +10,6 @@
   "Function to sum all the values in the provided input - accoring to Santa's
   rules."
   [x]
-  (println exclude)
   (cond
     (nil? x) 0
     (string? x) 0
