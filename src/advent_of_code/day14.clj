@@ -4,10 +4,10 @@
 (def puzzle
   "This is the input from the site for the reindeer capabilities."
   (for [l (cs/split-lines (slurp "resources/input/day14.txt"))
-                 :let [[_ rn sp dur rst] (re-matches #"(.*?) can fly (\d*?) km/s for (\d*?) seconds, but then must rest for (\d*?) seconds." l)
-                       sp' (Integer/parseInt sp)
-                       dur' (Integer/parseInt dur)
-                       rst' (Integer/parseInt rst)]]
+        :let [[_ rn sp dur rst] (re-matches #"(.*?) can fly (\d*?) km/s for (\d*?) seconds, but then must rest for (\d*?) seconds." l)
+              sp' (Integer/parseInt sp)
+              dur' (Integer/parseInt dur)
+              rst' (Integer/parseInt rst)]]
     [rn sp' dur' rst']))
 
 (defn go
