@@ -17,9 +17,9 @@
       (let [bhp (- (:hit-points bi) ps)
             php (- (:hit-points pi) bs)]
         (cond
-          (not (pos? bhp))
+          (<= bhp 0)
             "Player wins"
-          (not (pos? php))
+          (<= php 0)
             "Boss wins"
           (and (pos? bhp) (pos? php))
             (recur (assoc pi :hit-points php) (assoc bi :hit-points bhp))
@@ -28,10 +28,10 @@
 
 (defn solo
   ""
-  []
+  [d a]
   (let [me {:hit-points 100
-            :damage 8
-            :armor 2}]
+            :damage d
+            :armor a}]
     (play me boss)))
 
 (defn damage-cost
@@ -42,11 +42,11 @@
     4 8
     5 (f 10 (+ 8 25))
     6 (f 25 (+ 10 25) (+ 8 50))
-    7 (f 40 (+ 25 25) (+ 10 50) (+ 8 100))
-    8 (f 74 (+ 40 25) (+ 25 50) (+ 10 100))
-    9 (f (+ 74 25) (+ 40 50) (+ 25 100))
-    10 (f (+ 74 50) (+ 40 100))
-    11 (+ 74 100)
+    7 (f 40 (+ 25 25) (+ 10 50) (+ 8 100) (+ 8 50 25))
+    8 (f 74 (+ 40 25) (+ 25 50) (+ 10 100) (+ 10 50 25))
+    9 (f (+ 74 25) (+ 40 50) (+ 25 100) (+ 25 50 25) (+ 10 100 25) (+ 8 100 50))
+    10 (f (+ 74 50) (+ 40 100) (+ 40 50 25) (+ 25 100 25) (+ 10 100 50))
+    11 (f (+ 74 100) (+ 40 100 25) (+ 25 100 50))
     0))
 
 (defn armor-cost
@@ -54,9 +54,9 @@
   applied to a sequence of all the possible costs of acquiring that level."
   [f pts]
   (case pts
-    1 (f 13 20)
-    2 (f 31 (+ 13 20) 40)
-    3 (f 53 (+ 31 20) (+ 13 40) 80)
+    1 13
+    2 (f 31 (+ 13 20))
+    3 (f 53 (+ 31 20) (+ 13 40))
     4 (f 75 (+ 53 20) (+ 31 40) (+ 13 80))
     5 (f 102 (+ 75 20) (+ 53 40) (+ 31 80))
     6 (f (+ 102 20) (+ 75 40) (+ 53 80))
