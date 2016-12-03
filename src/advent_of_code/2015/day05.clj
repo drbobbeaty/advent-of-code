@@ -1,8 +1,8 @@
-(ns advent-of-code.day05)
+(ns advent-of-code.2015.day05)
 
 (def puzzle
   "This is the input from the site for the elevator moves for Santa."
-  (.split (slurp "resources/input/day05.txt") "\n" -1))
+  (.split (slurp "resources/2015/input/day05.txt") "\n" -1))
 
 (def vowels #{\a \e \i \o \u})
 

@@ -1,4 +1,4 @@
-(ns advent-of-code.day21
+(ns advent-of-code.2015.day21
   (:require [clojure.string :as cs]))
 
 (def boss

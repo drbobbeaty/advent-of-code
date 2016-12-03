@@ -1,9 +1,9 @@
-(ns advent-of-code.day08
+(ns advent-of-code.2015.day08
   (:require [clojure.string :as cs]))
 
 (def puzzle
   "This is the input from the site for the strings for Santa."
-  (cs/split-lines (slurp "resources/input/day08.txt")))
+  (cs/split-lines (slurp "resources/2015/input/day08.txt")))
 
 (defn esc
   "Function to escape Santa's strings the way he wants them."

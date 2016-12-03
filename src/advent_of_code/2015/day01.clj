@@ -1,8 +1,8 @@
-(ns advent-of-code.day01)
+(ns advent-of-code.2015.day01)
 
 (def puzzle
   "This is the input from the site for the elevator moves for Santa."
-  (slurp "resources/input/day01.txt"))
+  (slurp "resources/2015/input/day01.txt"))
 
 (defn trip
   "Function to calculate the floor Santa will be on with the provided

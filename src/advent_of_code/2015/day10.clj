@@ -1,4 +1,4 @@
-(ns advent-of-code.day10
+(ns advent-of-code.2015.day10
   (:require [clojure.string :as cs]))
 
 (defn say

@@ -1,4 +1,4 @@
-(ns advent-of-code.day07
+(ns advent-of-code.2015.day07
   (:require [clojure.core.memoize :as memo]
             [clojure.string :as cs]))
 
@@ -17,7 +17,7 @@
 
 (def puzzle
   "This is the input from the site for the elevator moves for Santa."
-  (into {} (for [l (cs/split-lines (slurp "resources/input/day07.txt"))
+  (into {} (for [l (cs/split-lines (slurp "resources/2015/input/day07.txt"))
                  :let [ops #{"AND" "OR" "NOT" "LSHIFT" "RSHIFT"}
                        flip (fn [x] (if (ops x) x (or (parse-int x) (keyword x))))
                        [_ src dest] (re-matches #"(.*?) -> (.*?)" l)

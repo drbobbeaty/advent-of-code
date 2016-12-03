@@ -1,10 +1,10 @@
-(ns advent-of-code.day17
+(ns advent-of-code.2015.day17
   (:require [clojure.math.combinatorics :refer [subsets]]
             [clojure.string :as cs]))
 
 (def puzzle
   "This is the input from the site for the bucket sizes."
-  (for [l (cs/split-lines (slurp "resources/input/day17.txt"))]
+  (for [l (cs/split-lines (slurp "resources/2015/input/day17.txt"))]
     (Integer/parseInt l)))
 
 (defn match

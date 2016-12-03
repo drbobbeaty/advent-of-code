@@ -1,4 +1,4 @@
-(ns advent-of-code.day02)
+(ns advent-of-code.2015.day02)
 
 (def puzzle
   "This is the input from the site for the package sizes. Each line is a
@@ -11,7 +11,7 @@
   (let [fix (fn [s] (->> (.split s "x" -1)
                          (map #(Integer/parseInt %))
                          (sort)))]
-    (->> (.split (slurp "resources/input/day02.txt") "\n" -1)
+    (->> (.split (slurp "resources/2015/input/day02.txt") "\n" -1)
          (filter not-empty)
          (map fix))))
 

@@ -1,4 +1,4 @@
-(ns advent-of-code.day04
+(ns advent-of-code.2015.day04
   (:require [pandect.algo.md5 :refer [md5]]))
 
 (defn coin

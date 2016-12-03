@@ -1,10 +1,10 @@
-(ns advent-of-code.day12
+(ns advent-of-code.2015.day12
   (:require [cheshire.core :as json]
             [clojure.string :as cs]))
 
 (def puzzle
   "This is the input from the site for Santa's books."
-  (json/parse-string (slurp "resources/input/day12.json") true))
+  (json/parse-string (slurp "resources/2015/input/day12.json") true))
 
 (def ^:dynamic *kill* nil)
 

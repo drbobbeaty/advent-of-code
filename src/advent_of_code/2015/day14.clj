@@ -1,9 +1,9 @@
-(ns advent-of-code.day14
+(ns advent-of-code.2015.day14
   (:require [clojure.string :as cs]))
 
 (def puzzle
   "This is the input from the site for the reindeer capabilities."
-  (for [l (cs/split-lines (slurp "resources/input/day14.txt"))
+  (for [l (cs/split-lines (slurp "resources/2015/input/day14.txt"))
         :let [[_ rn sp dur rst] (re-matches #"(.*?) can fly (\d*?) km/s for (\d*?) seconds, but then must rest for (\d*?) seconds." l)
               sp' (Integer/parseInt sp)
               dur' (Integer/parseInt dur)

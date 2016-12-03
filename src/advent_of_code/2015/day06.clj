@@ -1,11 +1,11 @@
-(ns advent-of-code.day06)
+(ns advent-of-code.2015.day06)
 
 (def board (repeat 1000 (repeat 1000 false)))
 
 (def puzzle
   "This is the input from the site for the lighting plans from Santa."
   (let [pint (fn [s] (Integer/parseInt s))]
-    (for [l (.split (slurp "resources/input/day06.txt") "\n" -1)
+    (for [l (.split (slurp "resources/2015/input/day06.txt") "\n" -1)
           :let [chg (cond
                       (.startsWith l "turn on") :on
                       (.startsWith l "turn off") :off

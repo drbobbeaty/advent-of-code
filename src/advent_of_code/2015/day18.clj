@@ -1,9 +1,9 @@
-(ns advent-of-code.day18
+(ns advent-of-code.2015.day18
   (:require [clojure.string :as cs]))
 
 (def puzzle
   "This is the input from the site for the initial light configuration."
-  (apply concat (for [l (cs/split-lines (slurp "resources/input/day18.txt"))]
+  (apply concat (for [l (cs/split-lines (slurp "resources/2015/input/day18.txt"))]
                   (map #(= \# %) l))))
 
 (defn next-gen

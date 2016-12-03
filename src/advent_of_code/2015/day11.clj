@@ -1,4 +1,4 @@
-(ns advent-of-code.day11
+(ns advent-of-code.2015.day11
   (:require [clojure.string :as cs]))
 
 (defn inc-pw

@@ -1,10 +1,10 @@
-(ns advent-of-code.day19
+(ns advent-of-code.2015.day19
   (:require [clojure.math.combinatorics :refer [subsets]]
             [clojure.string :as cs]))
 
 (def puzzle
   "This is the input from the site for the replacements."
-  (for [l (cs/split-lines (slurp "resources/input/day19.txt"))
+  (for [l (cs/split-lines (slurp "resources/2015/input/day19.txt"))
         :let [[_ src repl] (re-matches #"(.*?) => (.*?)" l)]
         :when (and src repl)]
     [src repl]))

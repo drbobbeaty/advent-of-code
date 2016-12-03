@@ -1,10 +1,10 @@
-(ns advent-of-code.day09
+(ns advent-of-code.2015.day09
   (:require [clojure.math.combinatorics :refer [permutations]]
             [clojure.string :as cs]))
 
 (def puzzle
   "This is the input from the site for the distances for Santa."
-  (into {} (for [l (cs/split-lines (slurp "resources/input/day09.txt"))
+  (into {} (for [l (cs/split-lines (slurp "resources/2015/input/day09.txt"))
                  :let [[_ src dest mi] (re-matches #"(.*?) to (.*?) = (.*?)" l)]]
              [(sort [src dest]) (Integer/parseInt mi)])))
 

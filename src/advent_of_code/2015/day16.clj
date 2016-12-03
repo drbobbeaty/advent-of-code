@@ -1,9 +1,9 @@
-(ns advent-of-code.day16
+(ns advent-of-code.2015.day16
   (:require [clojure.string :as cs]))
 
 (def puzzle
   "This is the input from the site for the Aunt Sue breakdowns."
-  (into {} (for [l (cs/split-lines (slurp "resources/input/day16.txt"))
+  (into {} (for [l (cs/split-lines (slurp "resources/2015/input/day16.txt"))
                  :let [parts (.split (cs/replace (cs/replace l #":|," "") #"Sue " "Sue_") " ")
                        prop (into {} (for [[k v] (partition 2 (rest parts))]
                                        [(keyword k) (Integer/parseInt v)]))]]

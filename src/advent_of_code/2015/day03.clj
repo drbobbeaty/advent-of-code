@@ -1,8 +1,8 @@
-(ns advent-of-code.day03)
+(ns advent-of-code.2015.day03)
 
 (def puzzle
   "This is the input from the site for the directions to homes in his route."
-  (slurp "resources/input/day03.txt"))
+  (slurp "resources/2015/input/day03.txt"))
 
 (defn houses
   "Function to convert a sequence of directions (^v<>) in a string into the
