@@ -3,7 +3,7 @@
   (require [clojure.string :as cs]))
 
 (def puzzle
-  "This is the input from the path to the Eazter Bunny HQ. The result of this
+  "This is the input from the path to the Easter Bunny HQ. The result of this
   will be a sequence of tuples of the form: ['R' 3] - a turn and a distance."
   (-> (slurp "resources/2016/input/day01.txt")
       (cs/trim)

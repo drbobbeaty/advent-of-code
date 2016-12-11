@@ -17,7 +17,7 @@
     :else         arg))
 
 (def puzzle
-  "This is the input from the code to the Eazter Bunny's bathrom'. The result
+  "This is the input from the code to the Easter Bunny's artwork. The result
   of this will be a sequence of strings of directions."
   (-> (slurp "resources/2016/input/day03.txt")
       (cs/trim)
