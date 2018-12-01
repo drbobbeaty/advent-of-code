@@ -7,9 +7,7 @@
   makes sense to provide some structure to the data so that it's easier to
   work with."
   [s]
-  (let [pint (fn [x] (Integer/parseInt (cs/trim x)))
-        puts (atom [])
-        moves (atom [])]
+  (let [pint (fn [x] (Integer/parseInt (cs/trim x)))]
     (cond
       (string? s) (cond
                     (.startsWith s "bot")
