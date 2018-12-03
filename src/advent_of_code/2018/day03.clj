@@ -71,8 +71,7 @@
     (doseq [[a b] (cmc/combinations pids 2)
             :let [ov (overlap (:patch a) (:patch b))]
             :when ov]
-      (swap! all disj (:id a))
-      (swap! all disj (:id b)))
+      (swap! all disj (:id a) (:id b)))
     @all))
 
 (defn yoyo
