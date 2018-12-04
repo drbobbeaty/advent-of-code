@@ -1,5 +1,5 @@
 (ns advent-of-code.2018.day03
-  "First day's solutions for the Advent of Code 2018"
+  "Third day's solutions for the Advent of Code 2018"
   (require [clojure.java.io :as io]
            [clojure.string :as cs]
            [clojure.math.combinatorics :as cmc]))

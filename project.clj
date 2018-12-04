@@ -6,6 +6,7 @@
   :source-paths ["src"]
   :min-lein-version "2.3.4"
   :dependencies [[cheshire "5.6.3"]
+                 [clj-time "0.15.0"]
                  [org.clojure/clojure "1.8.0"]
                  [org.clojure/core.memoize "0.5.8"]
                  [org.clojure/math.combinatorics "0.1.1"]
