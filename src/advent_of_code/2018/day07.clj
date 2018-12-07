@@ -51,7 +51,7 @@
         dur (fn [c] (+ 61 (- (int (first c)) (int \A))))
         ts (atom 0)
         work (atom {})
-        max-wk 5 ;;2
+        max-wk 5
         run? (fn [c] (get @work c))
         ready (fn [] (for [[k v] dep :when (and (need? k) (every? got? v))] k))]
     (loop []
