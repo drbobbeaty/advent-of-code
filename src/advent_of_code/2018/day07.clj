@@ -38,27 +38,7 @@
     ; return the string from the steps
     (apply str ops)))
 
-(defn one
-  "Function to put all the instructions in the right order from the puzzle so
-  that the elves can assemble the sleigh properly for Santa."
-  [& [src]]
-  (let [si (code-it (or src puzzle))
-        ops (ArrayList.)
-        dep (into {} (for [[k v] (group-by second si)] [k (map first v)]))
-        need? (fn [c] (neg? (.indexOf ops c)))
-        got? (complement need?)]
-    ; add those with no dependenciies at all
-    (.addAll ops (sort (remove (set (map second si)) (set (flatten si)))))
-    ; now we need to add the first sorted available step over and over
-    (loop []
-      (let [ads (for [[k v] dep :when (and (need? k) (every? got? v))] k)]
-        (when (not-empty ads)
-          (.add ops (first (sort ads)))
-          (recur))))
-    ; return the string from the steps
-    (apply str ops)))
-
-(defn second
+(defn two
   "Function to figure out how long it would take with 5 workers and a 60-sec
   offset on the name of the step, and all the rules from the puzzle."
   []
