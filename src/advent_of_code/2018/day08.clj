@@ -5,7 +5,7 @@
   (import [java.util LinkedList]))
 
 (def puzzle
-  "This is the "
+  "This is the structure of the nodes for the puzzle."
   (-> (slurp "resources/2018/input/day08.txt")
     (cs/trim)
     (cs/split #" ")
