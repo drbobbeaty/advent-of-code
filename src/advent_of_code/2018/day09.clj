@@ -39,7 +39,7 @@
     (loop [brd (gen {:last 0 :curr 0 :ring (ArrayList. [0])})
            ply 1
            turn 1]
-      (when (< turn lmarble)
+      (when (<= turn lmarble)
         (if-let [pts (:points brd)]
           (swap! scores bump ply (apply + pts)))
         (recur (gen brd) (mod (inc ply) players) (inc turn))))
