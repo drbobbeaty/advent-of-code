@@ -43,15 +43,19 @@
   (grow "#.####...##..#....#####.##.......##.#..###.#####.###.##.###.###.#...#...##.#.##.#...#..#.##..##.#.##"
         ["..##." ".#..#" "..#.." "###.." "##..." "#.###" ".##.#"
          ".#..." "...#." ".#.##" "..#.#" "#..#." ".###." "##.##"]
-        200))
+        20))
 
 (defn two
   "Function to run 50 bil generations on the plants, and then sum the numbers
-  on the pots that have plants in them at that time."
+  on the pots that have plants in them at that time. This is done by seeing
+  that the pattern after 160 generations is very regular, and it's simple
+  extrapolation after that."
   []
-  (let [go 160
-        pco 13542]
-    (+ pco (* 72 (- 50000000000 160)))))
+  (let [g0 160
+        pc0 13542
+        g1 161
+        pc1 13614]
+    (+ pc0 (* (- pc1 pc0) (- 50000000000 g0)))))
 
 (defn yoyo
   "Function just to test out the example and make sure we have the tools
