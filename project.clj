@@ -5,9 +5,15 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :source-paths ["src"]
   :min-lein-version "2.3.4"
-  :dependencies [[cheshire "5.6.3"]
-                 [clj-time "0.15.0"]
-                 [org.clojure/clojure "1.8.0"]
+  :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/core.memoize "0.5.8"]
                  [org.clojure/math.combinatorics "0.1.1"]
+                 ;; logging with log4j
+                 [org.slf4j/slf4j-log4j12 "1.7.5"]
+                 [log4j/log4j "1.2.17"]
+                 [org.clojure/tools.logging "0.2.6"]
+                 [robert/hooke "1.3.0"]
+                 ;; JSON and time libraries
+                 [cheshire "5.6.3"]
+                 [clj-time "0.15.0"]
                  [pandect "0.5.4"]])
