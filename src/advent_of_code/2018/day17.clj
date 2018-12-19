@@ -44,6 +44,7 @@
 (def scan (atom []))
 (def xoffset (atom 0))
 (def xlimit (atom 0))
+(def ylow (atom 0))
 (def ylimit (atom 0))
 
 (def stopper (atom 0))
@@ -75,6 +76,7 @@
         row (vec (repeat (+ 40 (- xh xl)) \.))]
     (reset! xoffset xos)
     (reset! xlimit (+ 20 xh))
+    (reset! ylow yl)
     (reset! ylimit yh)
     (reset! scan (vec (repeat (inc yh) row)))
     (sset 500 0 \+)
@@ -99,7 +101,7 @@
   "Function to count the number of wet cells in the scan - they could be
   water (~) or they counld have once had water (|)."
   []
-  (apply + (map #(count (filter #{\~ \|} %)) @scan)))
+  (apply + (map #(count (filter #{\~ \|} %)) (drop @ylow @scan))))
 
 (defn step
   ""
@@ -133,37 +135,27 @@
 (defn flow
   ""
   [sx sy]
-  ; (infof "flow: x,y = %s, %s" sx sy)
   (let [[rx rb] (edge sx sy 1)
-        [lx lb] (edge sx sy -1)
-       ]
-    ; (infof "[flow] y=%s L: %s ... R: %s" sy [lx lb] [rx rb])
-    ; (if (= 390 sx) (infof "[flow(x)] y=%s L: %s ... R: %s ... '%s'" sy [lx lb] [rx rb] (sget sx sy)))
+        [lx lb] (edge sx sy -1)]
     (cond
       (= :wall rb lb)
         (doseq [x' (range lx (inc rx))] (sset x' sy \~))
       (or (= :spill rb) (= :spill lb))
         (do
           (doseq [x' (range lx (inc rx))] (sset x' sy \|))
-          ; (when (= :spill rb) (infof "[flow] dripping (R) to %s, %s" rx sy) (drip rx sy))
-          ; (when (= :spill lb) (infof "[flow] dripping (L) to %s, %s" lx sy) (drip lx sy))
           (if (= :spill rb) (drip rx sy))
           (if (= :spill lb) (drip lx sy))
         )
       (or (= :edge rb) (= :edge lb))
-        false
-      )
-    false
-    ))
+        false)
+    false))
 
 (defn drip
   ""
   [& [sx sy]]
-  ; (infof "[%s] drip: x,y = %s, %s = '%s' & '%s'" @stopper sx sy (if (and sx sy) (str (sget sx sy))) (if (and sx sy) (str (sget sx (inc sy)))))
   (loop [x (or sx 500)
          y (or sy 0)]
     (if (<= y @ylimit)
-    ; (if (and (< @stopper 1000) (<= y 1644)) ;;(<= y @ylimit)
       (let [v (sget x y)
             ny (inc y)
             nv (sget x ny)
@@ -171,18 +163,12 @@
                   \+ true
                   \. (case nv
                        (\. \|) (do (sset x y \|) true)
-                       (\# \~) (do
-                                 ; (infof "[drip(.)] hit bottom: %s, %s w/ '%s' on '%s'" x y v nv)
-                                 (flow x y)
-                                )
+                       (\# \~) (flow x y)
                      )
                   \| (case nv
                        \.      (do (sset x y \|) true)
                        \|      true
-                       (\# \~) (do
-                                 ; (infof "[drip(|)] hit bottom: %s, %s w/ '%s' on '%s'" x y v nv)
-                                 (flow x y)
-                                )
+                       (\# \~) (flow x y)
                      )
                   )]
         (if go?
@@ -190,11 +176,8 @@
       (do
         (when (zero? (mod @stopper 5000))
           (infof "stopper=%s ... wet=%s" @stopper (wet))
-          (slog)
-        )
-        ; (infof "[drip(%s)] hit limit: %s, %s w/ '%s' on '%s'" @stopper x y (if (and sx sy) (str (sget sx sy))) (if (and sx sy) (str (sget sx (inc sy)))))
-        (swap! stopper inc)
-      )
+          (slog))
+        (swap! stopper inc))
       )))
 
 (defn run
@@ -215,18 +198,35 @@
   (doseq [i (range 200)]
     (reset! stopper 0)
     (drip))
-  ; (run)
   (slog)
-  ; (drip)
-  ; (slog)
   (wet))
+
+(defn check
+  "Function to take the solution we have in text form, and calculate the
+  value as it's meant to be. We get 37073, and that's exactly right."
+  []
+  (->> "resources/2018/input/day17.ans"
+    (io/reader)
+    (line-seq)
+    (drop-while (fn [s] (zero? (count (filter #(= \# %) s)))))
+    (map (fn [s] (count (filter #{\| \~} s))))
+    (apply +)))
+
+(defn puddles
+  "Function to take the solution we have in text form, and calculate the
+  value of the standing water."
+  []
+  (->> "resources/2018/input/day17.ans"
+    (io/reader)
+    (line-seq)
+    (map (fn [s] (count (filter #(= \~ %) s))))
+    (apply +)))
 
 (defn yoyo
   "Function just to test out the example and make sure we have the tools
   working right."
   []
-  (let [x 5
-        ]
+  (let [x 5]
     (build puzzle)
     (run)
     (slog)
