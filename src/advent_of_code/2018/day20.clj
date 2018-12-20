@@ -53,17 +53,54 @@
             (recur (subs src (inc idx)) (conj prts hdr)))
           (conj prts src))))))
 
-(defn shortest
+(defn breakdown
   ""
   [s]
   (let [opt? (fn [s] (and (.startsWith s "(") (.endsWith s ")")))
         dir? (fn [s] (neg? (.indexOf s "|")))]
     (cond
-      (dir? s) (count s)
-      (opt? s) (vec (map shortest (fork s)))
-      :else (map shortest (chop s))
-      )
-  ))
+      (dir? s) s
+      (opt? s) (vec (map breakdown (fork s)))
+      :else    (map breakdown (chop s)))))
+
+; (defn walk-it
+;   ""
+;   [s]
+;   (let [loc (atom [0 0])
+;         walls (atom [])
+;         mv-n (fn [[x y]] (reset! loc [(first @loc) (dec (second @loc))]))
+;         mv-s (fn [[x y]] (reset! loc [(first @loc) (inc (second @loc))]))
+;         mv-e (fn [[x y]] (reset! loc [(inc (first @loc)) (second @loc)]))
+;         mv-w (fn [[x y]] (reset! loc [(dec (first @loc)) (second @loc)]))
+;         mvfn {\N mv-n \S mv-s \E mv-e \W mv-w}
+;         ]
+;     (for [steps s]
+;       (if-let [wlk (first steps)]
+;         (cond
+;           (string? wlk)
+;             (doseq [stp wlk]
+;               (case stp
+;                 \N (let [[x y] @loc
+;                         ]
+;                      (swap! walls conj [])
+;                     )
+;                 \S
+;                 \E
+;                 \W
+;                 )
+;               )
+;           (vector? wlk)
+;             nil
+;         )
+;         walls
+;         )
+;       ))
+
+(defn show
+  ""
+  [s]
+  nil
+  )
 
 (defn one
   ""
@@ -74,11 +111,13 @@
   "Function just to test out the example and make sure we have the tools
   working right."
   []
-  (let [src ["^ENNWSWW(NEWS|)SSSEEN(WNSE|)EE(SWEN|)NNN$"
+  (let [src ["^ENWWW(NEEE|SSE(EE|N))$"
+             "^ENNWSWW(NEWS|)SSSEEN(WNSE|)EE(SWEN|)NNN$"
              "^ESSWWN(E|NNENN(EESS(WNSE|)SSS|WWWSSSSE(SW|NNNE)))$"
              "^WSSEESWWWNW(S|NENNEEEENN(ESSSSW(NWSW|SSEN)|WSWWN(E|WWS(E|SS))))$"
             ]
       ]
-    {:src (second src)
-     :path (shortest (second src))}
+    (breakdown (second src))
+    ; {:src (first src)
+    ;  :path (breakdown (first src))}
   ))
