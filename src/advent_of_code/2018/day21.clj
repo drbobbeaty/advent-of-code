@@ -92,9 +92,11 @@
     (run reg pgm ip 0)))
 
 (defn dupes
-  "Function to run a program, with a stargin set of registers, and an IP addr,
-  and starting program counter, and run it all the way to it's completion -
-  returning the registers when done."
+  "Function to run a program, with a starting set of registers, and an IP addr,
+  and starting program counter, this version looks for a repeating value in
+  register 3 - and returns the register set for the _previous_ iteration as
+  well as this iteration. The point being, we are looking for the *last*
+  value of register 3 *before* the first repeat."
   [reg pgm ip spc]
   (let [reg2 (atom #{})
         old (atom [])
@@ -105,17 +107,12 @@
                 (let [[ins a b c] row]
                   (swap! reg assoc ip pc)
                   (ins reg a b c)
-                  (when (= 13 pc)
+                  (when (= 28 pc)
                     (when (@reg3 (nth @reg 3))
                       (infof "ip=%s : %s %s %s %s : %s :: last: %s" pc (get op-names ins) a b c @reg @old)
-                      (throw (Exception. "Stopping!"))
-                      )
+                      (throw (Exception. "Stopping!")))
                     (swap! reg3 conj (nth @reg 3))
-                    (reset! old @reg)
-                    ; (if (@reg2 (nth @reg 2))
-                    ;   (throw (Exception. "Stopping!")))
-                    ; (swap! reg2 conj (nth @reg 2))
-                  )
+                    (reset! old @reg))
                   (recur (inc (nth @reg ip)) (inc cnt)))
                 cnt))]
     {:reg @reg :steps tot}))

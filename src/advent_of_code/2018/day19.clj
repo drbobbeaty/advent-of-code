@@ -5,6 +5,7 @@
                                               bori setr seti gtir gtri gtrr eqir
                                               eqri eqrr]]
            [clojure.java.io :as io]
+           [clojure.set :refer [map-invert]]
            [clojure.string :as cs]
            [clojure.tools.logging :refer [error errorf info infof warnf debugf]]))
 
@@ -27,6 +28,11 @@
    "eqir" eqir
    "eqri" eqri
    "eqrr" eqrr})
+
+(def op-names
+  "This is the reverse of the 'operations' map, and will be used for the
+  nice logging of the program as it runs."
+  (map-invert operations))
 
 (def puzzle
   "This is the input of the forest."
@@ -63,14 +69,16 @@
   and starting program counter, and run it all the way to it's completion -
   returning the registers when done."
   [reg pgm ip spc]
-  (loop [pc spc]
-    (if-let [row (nth pgm pc nil)]
-      (let [[ins a b c] row]
-        (swap! reg assoc ip pc)
-        (ins reg a b c)
-        (infof "ip=%s %s" pc @reg)
-        (recur (inc (nth @reg ip))))))
-  @reg)
+  (let [tot (loop [pc spc
+                   cnt 0]
+              (if-let [row (nth pgm pc nil)]
+                (let [[ins a b c] row]
+                  (swap! reg assoc ip pc)
+                  (ins reg a b c)
+                  (infof "ip=%s : %s %s %s %s : %s" pc (get op-names ins) a b c @reg)
+                  (recur (inc (nth @reg ip)) (inc cnt)))
+                cnt))]
+    {:reg @reg :steps tot}))
 
 (defn one
   "Function to run the background process with the addition of the IP addr
