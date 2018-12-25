@@ -6,11 +6,13 @@
            [clojure.tools.logging :refer [error errorf info infof warnf debugf]]))
 
 (def puzzle
-  "This is the location and radius data for all of the nanobots."
+  "This is the data structure for the puzzle input for the immune system and
+  infection groups."
   (read-string (slurp "resources/2018/input/day24.clj")))
 
 (def sample
-  "This is the sample nanobot data for testing."
+  "This is the data structure for the example input for the immune system and
+  infection groups."
   (read-string (slurp "resources/2018/input/day24_sample.clj")))
 
 (defn epower
@@ -46,7 +48,8 @@
 (defn target
   "Function to return the best target defender for the provided attacker.
   This obeys the rules in the puzzle for the strategy of the target
-  selection."
+  selection. If we can do no damage to these defenders, then return a
+  `nil` - as opposed to a zero-damage defender."
   [a sd]
   (if (and a (pos? (:units a)))
     (let [dmg (partial damage a)]
@@ -59,8 +62,8 @@
   and the second is the defender, or `nil`, and these are the battles for
   this one 'direction' of the turn."
   [att dfd]
-  (loop [sa (pwr-sort att)
-         sd dfd
+  (loop [sa (pwr-sort (filter #(pos? (:units %)) att))
+         sd (filter #(pos? (:units %)) dfd)
          bps []]
     (if-let [a (first sa)]
       (let [sel (target a sd)]
@@ -68,7 +71,10 @@
       bps)))
 
 (defn turn
-  ""
+  "Function to take one 'battle' turn, where targets are selected, and then
+  those individual skirmishes take place, updating the status of the units
+  as they progress, and then finishing with the number of little guys lost
+  in this round."
   [arg]
   (let [imm (atom (mapv #(assoc % :type :immune) (:immune arg)))
         inf (atom (mapv #(assoc % :type :infection) (:infection arg)))
@@ -78,8 +84,9 @@
         push (fn [u] (case (:type u)
                        :immune    (swap! imm assoc (dec (:group u)) u)
                        :infection (swap! inf assoc (dec (:group u)) u)))
+        lost (atom 0)
         mups (->> (concat (match-ups @imm @inf) (match-ups @inf @imm))
-               (sort-by (comp :initiative first) rev))
+               (sort-by (comp :initiative first) >))
       ]
     (info "=========================================")
     (doseq [[a d] mups
@@ -87,39 +94,42 @@
             :let [ca (pull a)
                   cd (pull d)
                   dmg (damage ca cd)]
-            :when (and (pos? dmg) (pos? (:units ca)) (pos? (:units cd)))]
-      (infof "attacker: %s %s ... damage: %s ... defender: %s %s ... change: %s" (:type ca) (:group ca) dmg (:type cd) (:group cd) (min (:units cd) (quot dmg (:hit-points cd))))
-      (push (assoc cd :units (max 0 (- (:units cd) (quot dmg (:hit-points cd)))))))
+            :when (and (pos? dmg) (pos? (:units cd)))
+            :let [kc (min (:units cd) (quot dmg (:hit-points cd)))]]
+      (infof "%s %s |%s| does: %s dmg to %s %s (%s), %s-%s = %su" (:type ca) (:group ca) (:initiative ca) dmg (:type cd) (:group cd) (epower cd) (:units cd) kc (- (:units cd) kc))
+      (swap! lost + kc)
+      (push (update cd :units - kc)))
     {:immune (map #(dissoc % :type) @imm)
-     :infection (map #(dissoc % :type) @inf)}))
+     :infection (map #(dissoc % :type) @inf)
+     :lost @lost}))
 
-(defn one
-  ""
-  []
+(defn battle
+  "Function to start with two armies, and battle until one is gone, or there
+  is no more ability to determine a winner - stalemate."
+  [m]
   (let [ucf (fn [s] (mapv (juxt :group :units) (filter #(pos? (:units %)) s)))
-        eg (loop [game puzzle]
+        eg (loop [game m]
              (let [nxt (turn game)
+                   lc (:lost nxt)
                    cgg (count (filter #(pos? (:units %)) (:immune nxt)))
                    cbg (count (filter #(pos? (:units %)) (:infection nxt)))]
-               (if (and (pos? cgg) (pos? cbg))
-                 (recur nxt)
-                 nxt)))]
-    {:immune (ucf (:immune eg))
-     :infection (ucf (:infection eg))
-     :winner (apply + (map :units (concat (:immune eg) (:infection eg))))}))
+              (if (and (pos? lc) (pos? cgg) (pos? cbg))
+                (recur nxt)
+                nxt)))]
+    {:immune (not-empty (ucf (:immune eg)))
+     :infection (not-empty (ucf (:infection eg)))
+     :remaining (apply + (map :units (concat (:immune eg) (:infection eg))))
+     :last-round (:lost eg)}))
+
+(defn one
+  "Function to try and see what happens in the little fella's body so I can
+  tell the Big Guy what's happening."
+  []
+  (battle puzzle))
 
 (defn yoyo
   "Function just to test out the example and make sure we have the tools
   working right."
   []
-  (let [ucf (fn [s] (mapv (juxt :group :units) (filter #(pos? (:units %)) s)))
-        eg (loop [game sample]
-             (let [nxt (turn game)
-                   cgg (count (filter #(pos? (:units %)) (:immune nxt)))
-                   cbg (count (filter #(pos? (:units %)) (:infection nxt)))]
-               (if (and (pos? cgg) (pos? cbg))
-                 (recur nxt)
-                 nxt)))]
-    {:immune (ucf (:immune eg))
-     :infection (ucf (:infection eg))
-     :winner (apply + (map :units (concat (:immune eg) (:infection eg))))}))
+  (battle sample)
+  )
