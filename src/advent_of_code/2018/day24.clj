@@ -3,7 +3,8 @@
   (require [advent-of-code.2016.day25 :refer [->int]]
            [clojure.java.io :as io]
            [clojure.string :as cs]
-           [clojure.tools.logging :refer [error errorf info infof warnf debugf]]))
+           [clojure.tools.logging :refer [error errorf info infof warnf
+                                          debug debugf]]))
 
 (def puzzle
   "This is the data structure for the puzzle input for the immune system and
@@ -88,7 +89,7 @@
         mups (->> (concat (match-ups @imm @inf) (match-ups @inf @imm))
                (sort-by (comp :initiative first) >))
       ]
-    (info "=========================================")
+    (debug "=========================================")
     (doseq [[a d] mups
             :when (and a d)
             :let [ca (pull a)
@@ -96,7 +97,7 @@
                   dmg (damage ca cd)]
             :when (and (pos? dmg) (pos? (:units cd)))
             :let [kc (min (:units cd) (quot dmg (:hit-points cd)))]]
-      (infof "%s %s |%s| does: %s dmg to %s %s (%s), %s-%s = %su" (:type ca) (:group ca) (:initiative ca) dmg (:type cd) (:group cd) (epower cd) (:units cd) kc (- (:units cd) kc))
+      (debugf "%s %s |%s| does: %s dmg to %s %s (%s), %s-%s = %su" (:type ca) (:group ca) (:initiative ca) dmg (:type cd) (:group cd) (epower cd) (:units cd) kc (- (:units cd) kc))
       (swap! lost + kc)
       (push (update cd :units - kc)))
     {:immune (map #(dissoc % :type) @imm)
@@ -127,9 +128,21 @@
   []
   (battle puzzle))
 
+(defn two
+  "Function to run the battle with a provided boost to the immune system.
+  The answer is the number of *remaining* units on the immune side when the
+  battle is won with the minimum boost possible. For me, that's 884."
+  [boost]
+  (->> (for [u (:immune puzzle)] (update u :attack-points + boost))
+    (vec)
+    (assoc puzzle :immune)
+    (battle)))
+
 (defn yoyo
   "Function just to test out the example and make sure we have the tools
   working right."
   []
-  (battle sample)
-  )
+  (->> (for [u (:immune sample)] (update u :attack-points + 1570))
+    (vec)
+    (assoc sample :immune)
+    (battle)))
