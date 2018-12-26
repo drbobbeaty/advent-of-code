@@ -1,6 +1,7 @@
 (ns advent-of-code.2018.day23
   "Twenty-third day's solutions for the Advent of Code 2018"
-  (require [advent-of-code.2016.day25 :refer [->int]]
+  (require [advent-of-code.path :refer [dist]]
+           [advent-of-code.util :refer [rev parse-int]]
            [clojure.java.io :as io]
            [clojure.string :as cs]
            [clojure.tools.logging :refer [error errorf info infof warnf debugf]]))
@@ -33,25 +34,10 @@
     (cond
       (string? s) (->> (re-matches #"^pos=<(-{0,1}\d+),(-{0,1}\d+),(-{0,1}\d+)>, r=(\d+)$" s)
                     (drop 1)
-                    (map ->int)
+                    (map parse-int)
                     (fix))
       (coll? s)   (map code-it s)
       :else       s)))
-
-(defn rev
-  "Function to do a simple reverse sort versus `compare`. This is for a simple
-  descending sort order - nothing special."
-  [a b]
-  (* -1 (compare a b)))
-
-(defn dist
-  "Function to compute the Manhattan distance between the two points
-  provided. This is just the simple distance in the coordinates."
-  [p rp]
-  (let [d (fn [[a b]] (Math/abs (- a b)))]
-    (->> (map vector p rp)
-      (map d)
-      (apply +))))
 
 (defn exhaustive
   "Function to take a range in x, y, and z and scan every point in that area
