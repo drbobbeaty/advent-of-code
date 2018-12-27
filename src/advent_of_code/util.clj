@@ -70,6 +70,82 @@
     (and (number? arg) (zero? arg)) nil
     :else arg))
 
+(defn update-keys
+  "Like update (above), but operates on multiple keys at once. Note
+  this is different from update-in (though they have the same argument
+  signature), which uses the list of keys as a path into the nested
+  data structure.  For update-keys, all the keys are top-level."
+  [m ks f & args]
+  (reduce #(apply update %1 %2 f args)
+          m
+          ks))
+
+(defn update-existing-keys
+  "Similar to update-keys (above), but operates only on existing keys
+  in the map. Note this is different from update-in (though they have
+  the same argument signature), which uses the list of keys as a path
+  into the a nested data structure. For update-existing-keys, all the
+  keys are top-level, and ignored if they aren't present."
+  [m ks f & args]
+  (reduce #(if (contains? %1 %2) (apply update %1 %2 f args) %1)
+          m
+          ks))
+
+(defn update-all
+  "Function to apply the provided function to *all* values in the provided
+  map. The result is a map with all the values changed by the function."
+  [m f & args]
+  (reduce-kv (fn [m' k v] (assoc m' k (apply f v args))) {} m))
+
+(defn rename-keys
+  "This is completely compatible with `clojure.set/rename-keys`.
+  But in addition to that behavior,
+    - If the second arg is a map and the value of a mapping is a function then the
+    function will be called with the key and the result will be used as the new key.
+    - If the second arg is a function then all the keys of `map` will be transformed
+    by it.
+    - If the second arg is sequential then only the keys in the sequence will be renamed
+    according to the third argument, assumed to be a function (identity is used if
+    there is not third argument)."
+  [map & [km_f_s f]]
+  (let [kmap (cond
+               (map? km_f_s) km_f_s
+               (fn? km_f_s) (zipmap (keys map) (repeat km_f_s))
+               (sequential? km_f_s) (zipmap km_f_s (repeat (or f identity)))
+               :else {km_f_s (or f identity)})]
+    (reduce
+      (fn [m [old new]]
+        (let [fnew (if (fn? new) new (fn [_] new))]
+          (if (contains? map old)
+            (assoc m (fnew old) (get map old))
+            m)))
+      (apply dissoc map (keys kmap)) kmap)))
+
+(defn remove-nil-keys
+  "Given a map, returns a new map with all keys whose values are nil removed."
+  [m]
+  (reduce (fn [m [k v]] (if (nil? v) (dissoc m k) m)) m m))
+
+(defn compact
+  "Simple convenience function to remove the nils from a collection, or
+  nil- or empty-valued keys from a map, but leave everything else alone.
+  This is just like the ruby compact method, and it's really quite useful for
+  sums and operations that will choke on nils."
+  [s]
+  (cond
+    (map? s)  (-> (update-all s nil-if-empty)
+                  (remove-nil-keys))
+    (set? s)  (disj s nil)
+    (coll? s) (remove nil? s)
+    :else     s))
+
+(defn compact-to-nil
+  "Function to remove all nils in a sequence and returns nil if the sequence
+  returns as empty."
+  [s]
+  (if-let [cs (compact s)]
+    (if-not (empty? cs) cs)))
+
 (defn non-zero?
   "Function to make sure all args are numbers and not zero. This will be very
   useful in the other functions to make sure that we don't divide by zero, etc."
@@ -220,3 +296,16 @@
     (string? x) (parse-double (apply str (filter is-double-char? x)) :default default)
     (coll? x)   (map #(parse-money % :default default) x)
     :else       (parse-double x :default default)))
+
+(defn sum
+  "Function to sum a collection, or a single value, and we need this because
+  many of the redis library commands will return a single value OR a sequence
+  and we need to be able to handle either case easily."
+  [x]
+  (cond
+    (nil? x) 0
+    (string? x) (if (neg? (.indexOf x ".")) (parse-int x) (parse-double x))
+    (map? x) (sum (vals x))
+    (coll? x)
+      (reduce + (map sum (compact x)))
+    :else x))

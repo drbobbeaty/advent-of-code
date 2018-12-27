@@ -15,6 +15,9 @@ just that I _wanted_ to do it, but a lot of the puzzles had state in them, and
 that wasn't a great fit for Clojure. But it was still fun to work these with
 a friend.
 
+I ended up finishing up a lot of this year while doing 2018, so a lot more
+of this is filled in. Good enough. :)
+
 ## 2017
 
 This I didn't really get started on, and I feel kinda bad about that. But I'm
@@ -23,7 +26,10 @@ also working on this year's puzzles.
 
 ## 2018
 
-Starting soon...
+I got more done this year than I expected. I didn't get three pathing problems
+done, and I have looked at the solutions for some, and they make no sense, so
+I think I'm going to have to figure this out by reading and working on a few
+ideas. But still... this is a lot better than I've done in the past.
 
 ## License
 
