@@ -16,6 +16,15 @@
   [a b]
   (* -1 (compare a b)))
 
+(defn sign
+  "Function to compute the simple 'sign' function from math - it's the sign
+  of the argument - simple and quick."
+  [x]
+  (cond
+    (pos? x) 1
+    (neg? x) -1
+    :else    0))
+
 (defn is-digit?
   "Predicate function to return 'true' if the supplied character is an ASCII
   digit: 0-9. This is helpful in scanning string data using filters."
