@@ -1,5 +1,5 @@
 (ns advent-of-code.2017.day15
-  "Fourteenth day's solutions for the Advent of Code 2017"
+  "Fifteenth day's solutions for the Advent of Code 2017"
   (require [advent-of-code.util :refer [parse-int]]
            [clojure.java.io :as io]
            [clojure.string :as cs]
