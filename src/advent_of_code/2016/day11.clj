@@ -1,6 +1,6 @@
 (ns advent-of-code.2016.day11
   "Eleventh day's solutions for the Advent of Code 2016"
-  (require [clojure.string :as cs]))
+  (:require [clojure.string :as cs]))
 
 ; (def puzzle
 ;   "This is the instructions for the bot control for the chip movement."

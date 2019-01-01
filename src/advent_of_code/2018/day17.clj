@@ -1,8 +1,8 @@
 (ns advent-of-code.2018.day17
   "Seventeenth day's solutions for the Advent of Code 2018"
-  (require [clojure.java.io :as io]
-           [clojure.string :as cs]
-           [clojure.tools.logging :refer [error errorf info infof warnf debugf]]))
+  (:require [clojure.java.io :as io]
+            [clojure.string :as cs]
+            [clojure.tools.logging :refer [error errorf info infof warnf debugf]]))
 
 (def puzzle
   "This is the input of the scan into the ground with sand and clay."

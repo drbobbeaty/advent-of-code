@@ -1,8 +1,8 @@
 (ns advent-of-code.2016.day19
   "Nineteenth day's solutions for the Advent of Code 2016"
-  (require [clojure.java.io :as io]
-           [clojure.string :as cs])
-  (import [java.util ArrayList LinkedList]))
+  (:require [clojure.java.io :as io]
+            [clojure.string :as cs])
+  (:import [java.util ArrayList LinkedList]))
 
 (defn steal
   "Function to play one round of the game for all the remaining elves in the

@@ -1,8 +1,8 @@
 (ns advent-of-code.2018.day03
   "Third day's solutions for the Advent of Code 2018"
-  (require [clojure.java.io :as io]
-           [clojure.string :as cs]
-           [clojure.math.combinatorics :as cmc]))
+  (:require [clojure.java.io :as io]
+            [clojure.string :as cs]
+            [clojure.math.combinatorics :as cmc]))
 
 (def puzzle
   "This is the source list of all elf fabric claims."

@@ -1,6 +1,6 @@
 (ns advent-of-code.2016.day04
   "Fourth day's solutions for the Advent of Code 2016"
-  (require [clojure.string :as cs]))
+  (:require [clojure.string :as cs]))
 
 (defn ->room
   "Function to convert the input from the Easter Bunny HQ directory into a simple

@@ -1,7 +1,7 @@
 (ns advent-of-code.2016.day18
   "Eighteenth day's solutions for the Advent of Code 2016"
-  (require [clojure.java.io :as io]
-           [clojure.string :as cs]))
+  (:require [clojure.java.io :as io]
+            [clojure.string :as cs]))
 
 (defn next-row
   "Function to take an existing row map and generate the next row based on the

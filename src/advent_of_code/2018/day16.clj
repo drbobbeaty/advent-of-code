@@ -1,8 +1,8 @@
 (ns advent-of-code.2018.day16
   "Sixteenth day's solutions for the Advent of Code 2018"
-  (require [clojure.java.io :as io]
-           [clojure.string :as cs]
-           [clojure.tools.logging :refer [error errorf info infof warnf debugf]]))
+  (:require [clojure.java.io :as io]
+            [clojure.string :as cs]
+            [clojure.tools.logging :refer [error errorf info infof warnf debugf]]))
 
 (defn pull-sample
   "Function to pull all the samples from my *edited* input from the site. I

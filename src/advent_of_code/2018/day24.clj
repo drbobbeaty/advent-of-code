@@ -1,10 +1,10 @@
 (ns advent-of-code.2018.day24
   "Twenty-fourth day's solutions for the Advent of Code 2018"
-  (require [advent-of-code.2016.day25 :refer [->int]]
-           [clojure.java.io :as io]
-           [clojure.string :as cs]
-           [clojure.tools.logging :refer [error errorf info infof warnf
-                                          debug debugf]]))
+  (:require [advent-of-code.2016.day25 :refer [->int]]
+            [clojure.java.io :as io]
+            [clojure.string :as cs]
+            [clojure.tools.logging :refer [error errorf info infof warnf
+                                           debug debugf]]))
 
 (def puzzle
   "This is the data structure for the puzzle input for the immune system and

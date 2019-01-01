@@ -1,9 +1,9 @@
 (ns advent-of-code.2018.day20
   "Twentieth day's solutions for the Advent of Code 2018"
-  (require [advent-of-code.2016.day25 :refer [->int]]
-           [clojure.java.io :as io]
-           [clojure.string :as cs]
-           [clojure.tools.logging :refer [error errorf info infof warnf debugf]]))
+  (:require [advent-of-code.2016.day25 :refer [->int]]
+            [clojure.java.io :as io]
+            [clojure.string :as cs]
+            [clojure.tools.logging :refer [error errorf info infof warnf debugf]]))
 
 (def puzzle
   "This is the input of the forest."

@@ -1,9 +1,9 @@
 (ns advent-of-code.2017.day02
   "Second day's solutions for the Advent of Code 2017"
-  (require [advent-of-code.util :refer [parse-int sum]]
-           [clojure.java.io :as io]
-           [clojure.math.combinatorics :as cmc]
-           [clojure.string :as cs]))
+  (:require [advent-of-code.util :refer [parse-int sum]]
+            [clojure.java.io :as io]
+            [clojure.math.combinatorics :as cmc]
+            [clojure.string :as cs]))
 
 (def puzzle
   "This is the spreadsheet data we need to compute the checksum."

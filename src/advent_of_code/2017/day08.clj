@@ -1,10 +1,10 @@
 (ns advent-of-code.2017.day08
   "Eighth day's solutions for the Advent of Code 2017"
-  (require [advent-of-code.util :refer [parse-int sum]]
-           [clojure.java.io :as io]
-           [clojure.string :as cs]
-           [clojure.tools.logging :refer [error errorf info infof warnf
-                                          debug debugf]]))
+  (:require [advent-of-code.util :refer [parse-int sum]]
+            [clojure.java.io :as io]
+            [clojure.string :as cs]
+            [clojure.tools.logging :refer [error errorf info infof warnf
+                                           debug debugf]]))
 
 (defn code-it
   "Function to parse the data from the puzzle input into a usable format for

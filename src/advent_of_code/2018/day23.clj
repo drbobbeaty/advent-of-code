@@ -1,10 +1,10 @@
 (ns advent-of-code.2018.day23
   "Twenty-third day's solutions for the Advent of Code 2018"
-  (require [advent-of-code.path :refer [dist]]
-           [advent-of-code.util :refer [rev parse-int]]
-           [clojure.java.io :as io]
-           [clojure.string :as cs]
-           [clojure.tools.logging :refer [error errorf info infof warnf debugf]]))
+  (:require [advent-of-code.path :refer [dist]]
+            [advent-of-code.util :refer [rev parse-int]]
+            [clojure.java.io :as io]
+            [clojure.string :as cs]
+            [clojure.tools.logging :refer [error errorf info infof warnf debugf]]))
 
 (def puzzle
   "This is the location and radius data for all of the nanobots."

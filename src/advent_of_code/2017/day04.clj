@@ -1,10 +1,10 @@
 (ns advent-of-code.2017.day04
   "Fourth day's solutions for the Advent of Code 2017"
-  (require [clojure.java.io :as io]
-           [clojure.math.combinatorics :as cmc]
-           [clojure.string :as cs]
-           [clojure.tools.logging :refer [error errorf info infof warnf
-                                          debug debugf]]))
+  (:require [clojure.java.io :as io]
+            [clojure.math.combinatorics :as cmc]
+            [clojure.string :as cs]
+            [clojure.tools.logging :refer [error errorf info infof warnf
+                                           debug debugf]]))
 
 (def puzzle
   "This is the spreadsheet data we need to compute the checksum."

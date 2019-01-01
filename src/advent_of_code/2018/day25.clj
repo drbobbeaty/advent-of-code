@@ -1,10 +1,10 @@
 (ns advent-of-code.2018.day25
   "Twenty-fifth day's solutions for the Advent of Code 2018"
-  (require [advent-of-code.2016.day25 :refer [->int]]
-           [advent-of-code.2018.day23 :refer [dist]]
-           [clojure.java.io :as io]
-           [clojure.string :as cs]
-           [clojure.tools.logging :refer [error errorf info infof warnf debugf]]))
+  (:require [advent-of-code.2016.day25 :refer [->int]]
+            [advent-of-code.2018.day23 :refer [dist]]
+            [clojure.java.io :as io]
+            [clojure.string :as cs]
+            [clojure.tools.logging :refer [error errorf info infof warnf debugf]]))
 
 (def puzzle
   "These are the stars in space/time that will open up the portal for the

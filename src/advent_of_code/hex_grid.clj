@@ -25,9 +25,9 @@
 (ns advent-of-code.hex-grid
   "Namespage for functions to do with a hex-grid that has come up in probelms
   and there is a simple way to represent it."
-  (require [advent-of-code.util :refer [sign lcase]]
-           [clojure.tools.logging :refer [error errorf info infof warnf
-                                          debug debugf]]))
+  (:require [advent-of-code.util :refer [sign lcase]]
+            [clojure.tools.logging :refer [error errorf info infof warnf
+                                           debug debugf]]))
 
 (defn move
   "Function to move one step, or a series of steps on the hex grid, starting

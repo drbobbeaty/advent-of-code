@@ -1,8 +1,8 @@
 (ns advent-of-code.2018.day09
   "Ninth day's solutions for the Advent of Code 2018"
-  (require [clojure.java.io :as io]
-           [clojure.string :as cs])
-  (import [java.util ArrayList]))
+  (:require [clojure.java.io :as io]
+            [clojure.string :as cs])
+  (:import [java.util ArrayList]))
 
 (def puzzle
   "This is the starting point for the puzzle:

@@ -1,7 +1,7 @@
 (ns advent-of-code.2017.day01
   "First day's solutions for the Advent of Code 2017"
-  (require [advent-of-code.util :refer [compact sum]]
-           [clojure.string :as cs]))
+  (:require [advent-of-code.util :refer [compact sum]]
+            [clojure.string :as cs]))
 
 (def puzzle
   "This is the sequence of single-digit numbers from the captcha for getting

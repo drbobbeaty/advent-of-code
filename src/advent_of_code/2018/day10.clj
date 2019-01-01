@@ -1,7 +1,7 @@
 (ns advent-of-code.2018.day10
   "Tenth day's solutions for the Advent of Code 2018"
-  (require [clojure.java.io :as io]
-           [clojure.string :as cs]))
+  (:require [clojure.java.io :as io]
+            [clojure.string :as cs]))
 
 (def puzzle
   "These are the measures point positions and velocities for the input to the

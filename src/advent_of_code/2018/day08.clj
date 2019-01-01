@@ -1,8 +1,8 @@
 (ns advent-of-code.2018.day08
   "Eighth day's solutions for the Advent of Code 2018"
-  (require [clojure.java.io :as io]
-           [clojure.string :as cs])
-  (import [java.util LinkedList]))
+  (:require [clojure.java.io :as io]
+            [clojure.string :as cs])
+  (:import [java.util LinkedList]))
 
 (def puzzle
   "This is the structure of the nodes for the puzzle."

@@ -1,8 +1,8 @@
 (ns advent-of-code.2018.day07
   "Seventh day's solutions for the Advent of Code 2018"
-  (require [clojure.java.io :as io]
-           [clojure.string :as cs])
-  (import [java.util ArrayList]))
+  (:require [clojure.java.io :as io]
+            [clojure.string :as cs])
+  (:import [java.util ArrayList]))
 
 (def puzzle
   "This is the source list of all elf fabric claims."

@@ -1,7 +1,7 @@
 (ns advent-of-code.2016.day16
   "Sixteenth day's solutions for the Advent of Code 2016"
-  (require [clojure.java.io :as io]
-           [clojure.string :as cs]))
+  (:require [clojure.java.io :as io]
+            [clojure.string :as cs]))
 
 (defn aug
   "Function to take a string input and augment it, per the rules of the puzzle,

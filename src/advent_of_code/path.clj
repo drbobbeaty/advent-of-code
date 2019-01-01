@@ -4,9 +4,9 @@
   namespace will be used in several others, and is here just for re-use. This
   is all based on the article at:
     https://nakkaya.com/2010/06/01/path-finding-using-astar-in-clojure/"
-  (require [clojure.data.priority-map :refer [priority-map-by]]
-           [clojure.string :as cs]
-           [clojure.tools.logging :refer [error errorf info infof warnf debugf]]))
+  (:require [clojure.data.priority-map :refer [priority-map-by]]
+            [clojure.string :as cs]
+            [clojure.tools.logging :refer [error errorf info infof warnf debugf]]))
 
 (defn dist
   "Function to compute the Manhattan distance between the two points

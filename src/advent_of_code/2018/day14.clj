@@ -1,8 +1,8 @@
 (ns advent-of-code.2018.day14
   "Fourteenth day's solutions for the Advent of Code 2018"
-  (require [clojure.java.io :as io]
-           [clojure.string :as cs]
-           [clojure.tools.logging :refer [error errorf info infof warnf debugf]]))
+  (:require [clojure.java.io :as io]
+            [clojure.string :as cs]
+            [clojure.tools.logging :refer [error errorf info infof warnf debugf]]))
 
 (defn bake
   "Function to take the state of the recipies and the elves, and bake one more

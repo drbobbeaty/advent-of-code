@@ -1,13 +1,13 @@
 (ns advent-of-code.2018.day21
   "Twenty-first day's solutions for the Advent of Code 2018"
-  (require [advent-of-code.2016.day25 :refer [->int]]
-           [advent-of-code.2018.day16 :refer [addr addi mulr muli banr bani borr
-                                              bori setr seti gtir gtri gtrr eqir
-                                              eqri eqrr]]
-           [advent-of-code.2018.day19 :refer [operations op-names code-it run]]
-           [clojure.java.io :as io]
-           [clojure.string :as cs]
-           [clojure.tools.logging :refer [error errorf info infof warnf debugf]]))
+  (:require [advent-of-code.2016.day25 :refer [->int]]
+            [advent-of-code.2018.day16 :refer [addr addi mulr muli banr bani borr
+                                               bori setr seti gtir gtri gtrr eqir
+                                               eqri eqrr]]
+            [advent-of-code.2018.day19 :refer [operations op-names code-it run]]
+            [clojure.java.io :as io]
+            [clojure.string :as cs]
+            [clojure.tools.logging :refer [error errorf info infof warnf debugf]]))
 
 (def puzzle
   "This is the program from the wrist unit:

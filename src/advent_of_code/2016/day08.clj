@@ -1,6 +1,6 @@
 (ns advent-of-code.2016.day08
   "Eighth day's solutions for the Advent of Code 2016"
-  (require [clojure.string :as cs]))
+  (:require [clojure.string :as cs]))
 
 (declare rect rotate)
 

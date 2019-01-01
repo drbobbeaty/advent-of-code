@@ -1,9 +1,9 @@
 (ns advent-of-code.2018.day15
   "Fourteenth day's solutions for the Advent of Code 2018"
-  (require [clojure.java.io :as io]
-           [clojure.string :as cs]
-           [clojure.tools.logging :refer [error errorf info infof warnf debugf]]
-           [clojure.walk :as cw]))
+  (:require [clojure.java.io :as io]
+            [clojure.string :as cs]
+            [clojure.tools.logging :refer [error errorf info infof warnf debugf]]
+            [clojure.walk :as cw]))
 
 (def puzzle
   "This is the input of the location of the battle royale area."
@@ -11,26 +11,6 @@
       (cs/trim)
       (cs/split #"\n")
       (as-> s (map vec s))))
-
-(defn cap
-  "Function to cap the value x at one of the two limits, if it's out of range.
-  This is very useful in many contexts to limit the excursion of the value."
-  [lo x hi]
-  (cond
-    (< x lo) lo
-    (< hi x) hi
-    :else    x))
-
-(defn add
-  "Simple function to add the two ordered-pairs and return an ordered-pair."
-  [[a b] [c d]]
-  [(+ a c) (+ b d)])
-
-(defn dist
-  "Simple function to determine the the Manhattan distance between the two
-  ordered-pairs and return an integer."
-  [[a b] [c d]]
-  (+ (Math/abs (- a c)) (Math/abs (- b d))))
 
 (defn bget
   "Function to get the value of the battlefield at column `x`, and row
@@ -61,30 +41,6 @@
     (#{\. \space} (bget bf x y)))
   ([bf ps x y]
     (open? (overlay bf ps) x y)))
-
-(defn bpath
-  "Predicate function to determine if there is a path from the first point
-  to the second point without something being in the way. This is a nasty
-  search problem as it might be a horribly complex search path."
-  ([bf sp ep]
-    (loop [[x y] sp
-           pp []]
-      (if (= [x y] ep)
-        pp
-        (let [x? (< y (second ep))
-              [dx dy] (if (< y (second ep))
-                        (let [cx (cap -1 (- (first ep) x) 1)
-                              cy (if (zero? cx) (cap -1 (- (second ep) y) 1) 0)]
-                          [cx cy])
-                        (let [cy (cap -1 (- (second ep) y) 1)
-                              cx (if (zero? cy) (cap -1 (- (first ep) x) 1) 0)]
-                          [cx cy]))
-              nx (+ x dx)
-              ny (+ y dy)]
-          (if (open? bf nx ny)
-            (recur [nx ny] (conj pp [nx ny])))))))
-  ([bf ps sp ep]
-    (bpath (overlay bf ps) sp ep)))
 
 (defn findp
   "Function to extract all the elves and goblins on the battlefield and
@@ -126,55 +82,6 @@
       (str msg "\n" (pretty bf))
       (str "battlefield:\n" (pretty bf)))))
 
-(defn best-move
-  "Function to return the best move, as described by the rules in the puzzle,
-  for a given player, amongst a set of players, on a battlefield. The returned
-  value is simply a tuple [x y]."
-  [p ps bf]
-  (let [ops (remove #(= (:pos %) (:pos p)) ps)
-        bfv (overlay bf ops)
-        poss (for [b (filter #(not= (:char %) (:char p)) ps)
-                   :let [bp (:pos b)]
-                   chk [[-1 0] [0 -1] [1 0] [0 1]]
-                   :let [[bx by] (add (:pos b) chk)]
-                   :when (open? bfv bx by)
-                   :let [bp (bpath bfv (:pos p) [bx by])]
-                   :when bp]
-               {:pos [bx by] :path bp})]
-    (if (pos? (count poss))
-      (let [shrt (apply min (map #(count (:path %)) poss))]
-        (->> (filter #(= shrt (count (:path %))) poss)
-          (sort-by (comp (juxt second first) :pos))
-          (first)
-          (:path)
-          (first))))))
-
-(defn attack
-  "Function to return the list of locations where a neighboring enemy is
-  located, and so you can attack."
-  [p ps bf]
-  (for [chk [[-1 0] [0 -1] [1 0] [0 1]]
-        :let [bp (add (:pos p) chk)]
-        :when (some #(and (not= (:char %) (:char p)) (= bp (:pos %))) ps)
-        ]
-    bp))
-
-(defn turn
-  ""
-  [bf ply]
-  (let [mv (fn [p & ps] (if-let [np (best-move p (flatten ps) bf)] (assoc p :pos np) p))
-       ]
-    (loop [todo (sortp ply)
-           done []]
-      (if-let [c (first todo)]
-        (let [atk (attack c ply bf)
-              c' (if (empty? atk) (mv c done (rest todo)) c)
-            ]
-          (blog (overlay bf (concat done (rest todo))))
-          (recur (rest todo) (conj done c'))
-          )
-        done))))
-
 (defn one
   ""
   [& [n]]
@@ -184,17 +91,4 @@
   "Function just to test out the example and make sure we have the tools
   working right."
   []
-  (let [src (map vec ["#######"
-                      "#...G.#"
-                      "#..G.G#"
-                      "#.#.#G#"
-                      "#...#E#"
-                      "#.....#"
-                      "#######"])
-        fs (findp src)
-        bf (clearp src)
-        tp (partial turn bf)
-        ; big-e (first (filter #(= \E (:char %)) fs))
-        ]
-    (blog (overlay bf (tp fs)))
-  ))
+  nil)

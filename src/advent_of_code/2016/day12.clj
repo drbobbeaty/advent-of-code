@@ -1,6 +1,6 @@
 (ns advent-of-code.2016.day12
   "Twelveth day's solutions for the Advent of Code 2016"
-  (require [clojure.string :as cs]))
+  (:require [clojure.string :as cs]))
 
 (defn ->int
   "Parses a string into an int, expecting \"Inf\" for infinity. A nil is parsed

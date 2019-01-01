@@ -1,7 +1,7 @@
 (ns advent-of-code.2018.day11
   "Eleventh day's solutions for the Advent of Code 2018"
-  (require [clojure.java.io :as io]
-           [clojure.string :as cs]))
+  (:require [clojure.java.io :as io]
+            [clojure.string :as cs]))
 
 (def serial-number
   "This is the serial number we have to use on the pwer grid based on the

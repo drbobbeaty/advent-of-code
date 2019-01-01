@@ -1,7 +1,7 @@
 (ns advent-of-code.2018.day12
   "Twelveth day's solutions for the Advent of Code 2018"
-  (require [clojure.java.io :as io]
-           [clojure.string :as cs]))
+  (:require [clojure.java.io :as io]
+            [clojure.string :as cs]))
 
 (defn gen
   "Function to take an `alive` function and a string representing the plants in

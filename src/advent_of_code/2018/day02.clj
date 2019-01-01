@@ -1,7 +1,7 @@
 (ns advent-of-code.2018.day02
   "Second day's solutions for the Advent of Code 2018"
-  (require [clojure.string :as cs]
-           [clojure.math.combinatorics :as cmc]))
+  (:require [clojure.string :as cs]
+            [clojure.math.combinatorics :as cmc]))
 
 (def puzzle
   "This is the input from the frequency changes for the puzzle."

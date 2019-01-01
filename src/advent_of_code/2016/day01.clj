@@ -1,6 +1,6 @@
 (ns advent-of-code.2016.day01
   "First day's solutions for the Advent of Code 2016"
-  (require [clojure.string :as cs]))
+  (:require [clojure.string :as cs]))
 
 (def puzzle
   "This is the input from the path to the Easter Bunny HQ. The result of this

@@ -1,9 +1,9 @@
 (ns advent-of-code.2018.day04
   "Fourth day's solutions for the Advent of Code 2018"
-  (require [clj-time.core :refer [month day minute]]
-           [clj-time.format :refer [formatter parse]]
-           [clojure.java.io :as io]
-           [clojure.string :as cs]))
+  (:require [clj-time.core :refer [month day minute]]
+            [clj-time.format :refer [formatter parse]]
+            [clojure.java.io :as io]
+            [clojure.string :as cs]))
 
 (def puzzle
   "This is the source list of all elf fabric claims."

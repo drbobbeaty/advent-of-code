@@ -1,9 +1,9 @@
 (ns advent-of-code.2017.day03
   "Third day's solutions for the Advent of Code 2017"
-  (require [advent-of-code.util :refer [sum]]
-           [clojure.string :as cs]
-           [clojure.tools.logging :refer [error errorf info infof warnf
-                                          debug debugf]]))
+  (:require [advent-of-code.util :refer [sum]]
+            [clojure.string :as cs]
+            [clojure.tools.logging :refer [error errorf info infof warnf
+                                           debug debugf]]))
 
 (defn spiral
   "Function to calculate the location of the provided target number on the

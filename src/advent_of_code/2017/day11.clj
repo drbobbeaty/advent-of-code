@@ -1,10 +1,10 @@
 (ns advent-of-code.2017.day11
   "Eleventh day's solutions for the Advent of Code 2017"
-  (require [advent-of-code.hex-grid :as hg]
-           [clojure.java.io :as io]
-           [clojure.string :as cs]
-           [clojure.tools.logging :refer [error errorf info infof warnf
-                                          debug debugf]]))
+  (:require [advent-of-code.hex-grid :as hg]
+            [clojure.java.io :as io]
+            [clojure.string :as cs]
+            [clojure.tools.logging :refer [error errorf info infof warnf
+                                           debug debugf]]))
 
 (def puzzle
   "This is the sequence of steps the child process took to get to me."

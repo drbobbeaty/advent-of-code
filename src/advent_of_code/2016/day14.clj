@@ -1,6 +1,6 @@
 (ns advent-of-code.2016.day14
   "Fourteenth day's solutions for the Advent of Code 2016"
-  (require [clojure.string :as cs]))
+  (:require [clojure.string :as cs]))
 
 (defn md5
   "Function to compute the MD5 hash of the input string and return it as a

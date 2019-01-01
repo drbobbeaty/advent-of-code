@@ -1,6 +1,6 @@
 (ns advent-of-code.2016.day03
   "Third day's solutions for the Advent of Code 2016"
-  (require [clojure.string :as cs]))
+  (:require [clojure.string :as cs]))
 
 (defn ->vec
   "Function to take a string of the form: '2 3 4' and convert it to a vector

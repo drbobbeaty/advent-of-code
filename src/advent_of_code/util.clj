@@ -1,8 +1,8 @@
 (ns advent-of-code.util
   "These functions are simple utility functions that we can use in any of the
   day's puzzles. They are here to simply afford simpler re-use."
-  (require [clojure.string :as cs]
-           [clojure.tools.logging :refer [error errorf info infof warnf debugf]]))
+  (:require [clojure.string :as cs]
+            [clojure.tools.logging :refer [error errorf info infof warnf debugf]]))
 
 (def not-nil? (complement nil?))
 

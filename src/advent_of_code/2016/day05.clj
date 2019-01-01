@@ -1,7 +1,7 @@
 (ns advent-of-code.2016.day05
   "Fifth day's solutions for the Advent of Code 2016"
-  (require [clojure.string :as cs]
-           [pandect.algo.md5 :refer [md5]]))
+  (:require [clojure.string :as cs]
+            [pandect.algo.md5 :refer [md5]]))
 
 (defn one
   "Function to compute the password to the door based on the rules in the puzzle.

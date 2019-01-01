@@ -1,6 +1,6 @@
 (ns advent-of-code.2018.day01
   "First day's solutions for the Advent of Code 2018"
-  (require [clojure.string :as cs]))
+  (:require [clojure.string :as cs]))
 
 (def puzzle
   "This is the input from the frequency changes for the puzzle."

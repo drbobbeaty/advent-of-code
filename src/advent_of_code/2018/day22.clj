@@ -1,8 +1,8 @@
 (ns advent-of-code.2018.day22
   "Twenty-second day's solutions for the Advent of Code 2018"
-  (require [advent-of-code.path :refer [gget dist search]]
-           [clojure.string :as cs]
-           [clojure.tools.logging :refer [error errorf info infof warnf debugf]]))
+  (:require [advent-of-code.path :refer [gget dist search]]
+            [clojure.string :as cs]
+            [clojure.tools.logging :refer [error errorf info infof warnf debugf]]))
 
 (def puzzle
   "This is the structure of the cave for the puzzle today."

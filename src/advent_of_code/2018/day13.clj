@@ -1,9 +1,9 @@
 (ns advent-of-code.2018.day13
   "Thirteenth day's solutions for the Advent of Code 2018"
-  (require [clojure.java.io :as io]
-           [clojure.string :as cs]
-           [clojure.tools.logging :refer [error errorf info infof warnf debugf]]
-           [clojure.walk :as cw]))
+  (:require [clojure.java.io :as io]
+            [clojure.string :as cs]
+            [clojure.tools.logging :refer [error errorf info infof warnf debugf]]
+            [clojure.walk :as cw]))
 
 (def trial
   "This is the test input from the tracks and cars for the elves."

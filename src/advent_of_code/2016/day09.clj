@@ -1,6 +1,6 @@
 (ns advent-of-code.2016.day09
   "Ninth day's solutions for the Advent of Code 2016"
-  (require [clojure.string :as cs]))
+  (:require [clojure.string :as cs]))
 
 (def puzzle
   "This is the input from the code for the Easter Bunny's keypad display. The

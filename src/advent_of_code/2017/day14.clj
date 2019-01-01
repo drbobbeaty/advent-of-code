@@ -1,11 +1,11 @@
 (ns advent-of-code.2017.day14
   "Fourteenth day's solutions for the Advent of Code 2017"
-  (require [advent-of-code.2017.day10 :as d10]
-           [advent-of-code.util :refer [parse-int]]
-           [clojure.java.io :as io]
-           [clojure.string :as cs]
-           [clojure.tools.logging :refer [error errorf info infof warnf
-                                          debug debugf]]))
+  (:require [advent-of-code.2017.day10 :as d10]
+            [advent-of-code.util :refer [parse-int]]
+            [clojure.java.io :as io]
+            [clojure.string :as cs]
+            [clojure.tools.logging :refer [error errorf info infof warnf
+                                           debug debugf]]))
 
 (def puzzle
   "This is the code that we will use, with knot, to build the disk pattern."

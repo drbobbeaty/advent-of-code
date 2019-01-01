@@ -1,6 +1,6 @@
 (ns advent-of-code.2016.day02
   "Second day's solutions for the Advent of Code 2016"
-  (require [clojure.string :as cs]))
+  (:require [clojure.string :as cs]))
 
 (def puzzle
   "This is the input from the code to the Easter Bunny's bathrom. The result

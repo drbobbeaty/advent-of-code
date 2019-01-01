@@ -1,10 +1,10 @@
 (ns advent-of-code.2017.day05
   "Fifth day's solutions for the Advent of Code 2017"
-  (require [advent-of-code.util :refer [parse-int]]
-           [clojure.java.io :as io]
-           [clojure.string :as cs]
-           [clojure.tools.logging :refer [error errorf info infof warnf
-                                          debug debugf]]))
+  (:require [advent-of-code.util :refer [parse-int]]
+            [clojure.java.io :as io]
+            [clojure.string :as cs]
+            [clojure.tools.logging :refer [error errorf info infof warnf
+                                           debug debugf]]))
 
 (def puzzle
   "This is the jump sequence we need to run through for the puzzle."

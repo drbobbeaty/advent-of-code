@@ -1,10 +1,10 @@
 (ns advent-of-code.2017.day09
   "Ninth day's solutions for the Advent of Code 2017"
-  (require [advent-of-code.util :refer [parse-int sum]]
-           [clojure.java.io :as io]
-           [clojure.string :as cs]
-           [clojure.tools.logging :refer [error errorf info infof warnf
-                                          debug debugf]]))
+  (:require [advent-of-code.util :refer [parse-int sum]]
+            [clojure.java.io :as io]
+            [clojure.string :as cs]
+            [clojure.tools.logging :refer [error errorf info infof warnf
+                                           debug debugf]]))
 
 (def puzzle
   "This is the sequence of items in the stream as it flows by."

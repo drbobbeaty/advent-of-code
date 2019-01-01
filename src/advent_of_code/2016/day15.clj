@@ -1,7 +1,7 @@
 (ns advent-of-code.2016.day15
   "Fifteenth day's solutions for the Advent of Code 2016"
-  (require [clojure.java.io :as io]
-           [clojure.string :as cs]))
+  (:require [clojure.java.io :as io]
+            [clojure.string :as cs]))
 
 (def puzzle
   "This is the source list of all the discs and their initial positions."
