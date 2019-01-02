@@ -318,3 +318,28 @@
     (coll? x)
       (reduce + (map sum (compact x)))
     :else x))
+
+(defn split
+  "Function to use the fastest Java string split available, and if there's a
+  supplied, non-nil, 'map-from' value then all values in the parsing that match
+  that value will be replaced with the 'map-to' value. This can be used to map
+  default values for empty or typical values.
+
+    (split \"a:b:c:d\" \":\")
+    => [\"a\" \"b\" \"c\" \"d\"]
+
+    (split \"a:b::d\" \":\" \"\" \"silly\")
+    => [\"a\" \"b\" \"silly\" \"d\"]
+
+  If the `delim` is a regex, then this function falls back to the `clojure.string`
+  implementation - but protects from the `nil` argument to be safe."
+  [s delim & [map-from map-to]]
+  (if (string? s)
+    (let [lst (cond
+                (empty? s) [s]
+                (string? delim) (.split s delim -1)
+                (instance? java.util.regex.Pattern delim) (cs/split s delim)
+                :else [s])]
+      (if map-from
+        (mapv #(if (= map-from %) map-to %) lst)
+        (vec lst)))))

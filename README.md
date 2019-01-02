@@ -24,6 +24,9 @@ This I didn't really get started on, and I feel kinda bad about that. But I'm
 hoping to take some time and really see if I can do a few of these while I'm
 also working on this year's puzzles.
 
+Looking pretty good - up to Day 20, and I'll keep working on these as I have
+time.
+
 ## 2018
 
 I got more done this year than I expected. I didn't get three pathing problems
