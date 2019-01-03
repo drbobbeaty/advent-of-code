@@ -25,6 +25,24 @@
     (neg? x) -1
     :else    0))
 
+(defn- test-prime
+  "Determine if a number is prime by looping through divisors"
+  [x]
+  (loop [iter 2
+         top (int (Math/sqrt x))]
+    (if (> iter top)
+      true
+      (if (= 0 (mod x iter))
+        false
+        (recur (inc iter) top)))))
+
+(defn is-prime?
+  "Determines if a given integer is prime."
+  [x]
+  (if (< x 2)
+    false
+    (test-prime x)))
+
 (defn is-digit?
   "Predicate function to return 'true' if the supplied character is an ASCII
   digit: 0-9. This is helpful in scanning string data using filters."
