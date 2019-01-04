@@ -27,6 +27,9 @@ also working on this year's puzzles.
 Looking pretty good - up to Day 20, and I'll keep working on these as I have
 time.
 
+Finished all 25 days! This was a really impressive run for me - didn't have
+to skip a day - just one to the next, and then on we go. Not bad. :)
+
 ## 2018
 
 I got more done this year than I expected. I didn't get three pathing problems
