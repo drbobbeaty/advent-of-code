@@ -1,6 +1,7 @@
 (ns advent-of-code.2018.day15
   "Fourteenth day's solutions for the Advent of Code 2018"
-  (:require [clojure.java.io :as io]
+  (:require [advent-of-code.util :refer [split]]
+            [clojure.java.io :as io]
             [clojure.string :as cs]
             [clojure.tools.logging :refer [error errorf info infof warnf debugf]]
             [clojure.walk :as cw]))
@@ -8,9 +9,9 @@
 (def puzzle
   "This is the input of the location of the battle royale area."
   (-> (slurp "resources/2018/input/day15.txt")
-      (cs/trim)
-      (cs/split #"\n")
-      (as-> s (map vec s))))
+    (cs/trim)
+    (split "\n")
+    (as-> s (map vec s))))
 
 (defn bget
   "Function to get the value of the battlefield at column `x`, and row
@@ -18,7 +19,7 @@
   the comparisons easier."
   [bf x y]
   (-> (nth bf y [])
-      (nth x \space)))
+    (nth x \space)))
 
 (defn overlay
   "Function to overlay the players on the battlefield so that we can get
