@@ -7,8 +7,8 @@
 (def puzzle
   "This is the source list of all elf fabric claims."
   (-> "resources/2018/input/day04.txt"
-      (io/reader)
-      (line-seq)))
+    (io/reader)
+    (line-seq)))
 
 (def ^:private elf-fmt "yyyy-MM-dd HH:mm")
 
