@@ -15,5 +15,5 @@
                  [robert/hooke "1.3.0"]
                  ;; JSON and time libraries
                  [cheshire "5.6.3"]
-                 [clj-time "0.15.0"]
+                 [clojure.java-time "0.3.2"]
                  [pandect "0.5.4"]])

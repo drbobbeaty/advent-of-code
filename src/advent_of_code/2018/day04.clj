@@ -1,8 +1,7 @@
 (ns advent-of-code.2018.day04
   "Fourth day's solutions for the Advent of Code 2018"
-  (:require [clj-time.core :refer [month day minute]]
-            [clj-time.format :refer [formatter parse]]
-            [clojure.java.io :as io]
+  (:require [clojure.java.io :as io]
+            [java-time :refer [as local-date-time]]
             [clojure.string :as cs]))
 
 (def puzzle
@@ -11,20 +10,20 @@
       (io/reader)
       (line-seq)))
 
-(def ^:private elf-fmt (formatter "yyyy-MM-dd HH:mm"))
+(def ^:private elf-fmt "yyyy-MM-dd HH:mm")
 
 (defn first-pass
   "Function to do the simple parsing of the input from the guard schedule to
   something that can be sorted, and then used to compute the attack plan."
   [s]
   (let [pint (fn [x] (Integer/parseInt (cs/trim x)))
-        pdte (fn [x] (parse elf-fmt (cs/trim x)))]
+        pdte (fn [x] (local-date-time elf-fmt (cs/trim x)))]
     (cond
       (string? s) (let [rts (drop 1 (re-matches #"^\[(.+)\] .*$" s))
                         ts (pdte (first rts))
                         base {:time ts
-                              :date (format "%02d-%02d" (month ts) (day ts))
-                              :mins (minute ts)}]
+                              :date (format "%02d-%02d" (as ts :month-of-year) (as ts :day-of-month))
+                              :mins (as ts :minute-of-hour)}]
                     (cond
                       (.endsWith s "begins shift")
                         (let [pts (drop 1 (re-matches #"^\[.+\] Guard #(\d+) begins shift$" s))]
