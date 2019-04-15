@@ -1,6 +1,9 @@
 # Advent of Code
 
-Just my solutions to the problems at http://adventofcode.com
+Just my solutions to the problems at [Advent of Code](https://adventofcode.com),
+which a [friend](https://github.com/hby/) introduced me to in 2015. It has been
+a fun way to push the usage of Clojure to stateful, and more traditionally
+mutable domain problems.
 
 ## 2015
 
