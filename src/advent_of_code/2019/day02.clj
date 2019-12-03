@@ -18,20 +18,21 @@
   (if-let [idx (nth s k nil)]
     (nth s idx nil)))
 
-(defn step
+(defn run
   "Function to take the memory map, and a program counter, and execute the
   Intcode program starting at that address and ending when the program
   successfully exits."
-  [mem & [pc]]
-  (if-let [op (nth mem (or pc 0) nil)]
-    (case op
-      (1 2) (let [ip (or pc 0)
-                  a (vat mem (+ 1 ip))
-                  b (vat mem (+ 2 ip))
-                  tgt (nth mem (+ 3 ip) nil)]
-              (step (assoc mem tgt ((if (= op 1) + *) a b)) (+ 4 ip)))
-      99    mem)
-    mem))
+  [mems & [pc]]
+  (loop [mem mems
+         ip (or pc 0)]
+    (let [op (nth mem ip nil)]
+      (case op
+        (1 2) (let [a (vat mem (+ 1 ip))
+                    b (vat mem (+ 2 ip))
+                    tgt (nth mem (+ 3 ip) nil)]
+                (recur (assoc mem tgt ((if (= op 1) + *) a b)) (+ 4 ip)))
+        99    mem
+        mem))))
 
 (defn one
   "Function to take the puzzle input and replace the second and third
@@ -43,9 +44,9 @@
         fixed (-> inp
                 (assoc 1 12)
                 (assoc 2 2))]
-    (step fixed)))
+    (run fixed)))
 
-(defn run
+(defn run-args
   "Function to take a noun and verb and place them in memory locations 1 and 2
   respectively, and then run the provided puzzle program to it's completion
   and then return the value at location 0. This is just about 'one', but we
@@ -55,7 +56,7 @@
   (let [inp (-> (vec puzzle)
               (assoc 1 noun)
               (assoc 2 verb))]
-    (first (step inp))))
+    (first (run inp))))
 
 (defn two
   "Function to find the noun and verb that will return the value specified in
@@ -65,6 +66,6 @@
   []
   (->> (for [n (range 100)
              v (range 100)
-             :when (= (run n v) 19690720)]
+             :when (= (run-args n v) 19690720)]
          [n v (+ (* 100 n) v)])
        (first)))
