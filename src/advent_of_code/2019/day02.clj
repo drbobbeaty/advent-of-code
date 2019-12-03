@@ -4,7 +4,7 @@
             [clojure.string :as cs]))
 
 (def puzzle
-  "This is the input from the frequency changes for the puzzle."
+  "This is the input program for the Intcode computer to run."
   (-> (slurp "resources/2019/input/day02.txt")
       (cs/trim)
       (cs/split #",")
