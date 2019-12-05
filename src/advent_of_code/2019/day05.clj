@@ -1,11 +1,11 @@
 (ns advent-of-code.2019.day05
   "Fifth day's solutions for the Advent of Code 2019"
-  (:require [advent-of-code.util :refer [parse-int]]
+  (:require [advent-of-code.util :refer [parse-int not-zero?]]
             [advent-of-code.2019.day02 :refer [vat]]
             [clojure.string :as cs]))
 
 (def puzzle
-  "This is the input of the "
+  "This is the input of the Intcode program to run."
   (-> (slurp "resources/2019/input/day05.txt")
       (cs/trim)
       (cs/split #",")
@@ -32,8 +32,7 @@
           ld (fn [ipos]
                (if (= \1 (nth mde (dec ipos) \0))
                  (nth mem (+ ipos ip) nil)
-                 (vat mem (+ ipos ip))))
-          not-zero? (comp not zero?)]
+                 (vat mem (+ ipos ip))))]
       (case op
         (1 2) (let [a (ld 1)
                     b (ld 2)

@@ -5,6 +5,7 @@
             [clojure.tools.logging :refer [error errorf info infof warnf debugf]]))
 
 (def not-nil? (complement nil?))
+(def not-zero? (complement zero?))
 
 (def ascii-0 (int \0))
 (def ascii-9 (int \9))
