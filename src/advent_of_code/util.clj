@@ -26,6 +26,28 @@
     (neg? x) -1
     :else    0))
 
+(defn mk-seq
+  "Function to place the argument in a sequence (vector) if it's not already a
+  sequence (or vector). This is very nice when you might have an elemental value
+  and need to make sure that whatever is returned is actually a sequence no
+  matter what. Redis is big on needing this."
+  [arg]
+  (cond
+    (map? arg) [arg]
+    (coll? arg) arg
+    :else [arg]))
+
+(defn un-seq
+  "Function to be the opposite of `mk-seq`, where we take a sequence in, and
+  if there's only one item in the sequence, we return that without the
+  enclosing sequence. If it's got more elements, we leave it alone. If it's
+  just a value, then return that unmolested."
+  [s]
+  (cond
+    (map? s)  s
+    (coll? s) (if (< 1 (count s)) s (first s))
+    :else     s))
+
 (defn- test-prime
   "Determine if a number is prime by looping through divisors"
   [x]
