@@ -44,8 +44,7 @@
                  (let [msz (count mem)]
                    (if (< ad msz)
                      (assoc mem ad v)
-                     (assoc (vec (concat mem (repeat (inc (- ad msz)) 0))) ad v)
-                   )))]
+                     (assoc (vec (concat mem (repeat (inc (- ad msz)) 0))) ad v))))]
         (case op
           (1 2) (let [a (ld 1)
                       b (ld 2)
