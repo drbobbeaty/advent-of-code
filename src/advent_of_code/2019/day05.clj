@@ -25,7 +25,8 @@
   Intcode program starting at that address and ending when the program
   successfully exits."
   [mems & [arg pc]]
-  (let [no-io? (not (parse-bool (:io-wait mems)))]
+  (let [no-io? (not (parse-bool (:io-wait mems)))
+        rbos (atom 0)]
     (loop [mem (vec (if (map? mems) (:memory mems) mems))
            ip (or (if (map? mems) (:pc mems) pc) 0)
            ins (if-let [v (if (map? mems) (:input mems) arg)] (mk-seq v))
@@ -33,19 +34,27 @@
       (let [inst (nth mem ip nil)
             op (mod inst 100)
             mde (reverse (drop-last 2 (str inst)))
-            ld (fn [ipos]
-                 (if (= \1 (nth mde (dec ipos) \0))
-                   (nth mem (+ ipos ip) nil)
-                   (vat mem (+ ipos ip))))]
+            adr (fn [ipos]
+                  (case (nth mde (dec ipos) \0)
+                    \0 (nth mem (+ ipos ip) nil)
+                    \1 (+ ipos ip)
+                    \2 (+ (nth mem (+ ipos ip) 0) @rbos)))
+            ld (fn [ipos] (nth mem (adr ipos) 0))
+            st (fn [ad v]
+                 (let [msz (count mem)]
+                   (if (< ad msz)
+                     (assoc mem ad v)
+                     (assoc (vec (concat mem (repeat (inc (- ad msz)) 0))) ad v)
+                   )))]
         (case op
           (1 2) (let [a (ld 1)
                       b (ld 2)
-                      tgt (nth mem (+ 3 ip) nil)]
-                  (recur (assoc mem tgt ((if (= op 1) + *) a b)) (+ 4 ip) ins outs))
+                      tgt (adr 3)]
+                  (recur (st tgt ((if (= op 1) + *) a b)) (+ 4 ip) ins outs))
           3     (let [inp (first ins)
-                      tgt (nth mem (+ 1 ip) nil)]
+                      tgt (adr 1)]
                   (if (or inp no-io?)
-                    (recur (assoc mem tgt (or inp 0)) (+ 2 ip) (rest ins) outs)
+                    (recur (st tgt (or inp 0)) (+ 2 ip) (rest ins) outs)
                     {:output (persistent! outs) :memory mem :input nil :pc ip :state :io-in}))
           4     (let [ov (ld 1)]
                   (if no-io?
@@ -56,8 +65,11 @@
                   (recur mem (if ((if (= op 5) not-zero? zero?) tst) nip (+ 3 ip)) ins outs))
           (7 8) (let [a (ld 1)
                       b (ld 2)
-                      tgt (nth mem (+ 3 ip) nil)]
-                  (recur (assoc mem tgt (if ((if (= op 7) < =) a b) 1 0)) (+ 4 ip) ins outs))
+                      tgt (adr 3)]
+                  (recur (st tgt (if ((if (= op 7) < =) a b) 1 0)) (+ 4 ip) ins outs))
+          9     (let [os (ld 1)]
+                  (swap! rbos + os)
+                  (recur mem (+ 2 ip) ins outs))
           99    {:output (persistent! outs) :memory mem :input ins :pc ip :state :halt}
           {:output (persistent! outs) :memory mem :input ins :pc ip :state :exception})))))
 
