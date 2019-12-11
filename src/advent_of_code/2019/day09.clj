@@ -1,6 +1,6 @@
 (ns advent-of-code.2019.day09
   "Ninth day's solutions for the Advent of Code 2019"
-  (:require [advent-of-code.util :refer [parse-int]]
+  (:require [advent-of-code.util :refer [parse-long]]
             [advent-of-code.2019.day05 :refer [run]]
             [clojure.string :as cs]))
 
@@ -9,7 +9,7 @@
   (-> (slurp "resources/2019/input/day09.txt")
       (cs/trim)
       (cs/split #",")
-      (->> (map parse-int))))
+      (->> (map parse-long))))
 
 (defn yoyo
   "Run the test inputs for the final additions to the Intcode computer"

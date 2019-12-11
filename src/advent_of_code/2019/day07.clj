@@ -1,6 +1,6 @@
 (ns advent-of-code.2019.day07
   "Seventh day's solutions for the Advent of Code 2019"
-  (:require [advent-of-code.util :refer [parse-int]]
+  (:require [advent-of-code.util :refer [parse-long]]
             [advent-of-code.2019.day05 :refer [run]]
             [clojure.math.combinatorics :as cmc]
             [clojure.string :as cs]))
@@ -10,7 +10,7 @@
   (-> (slurp "resources/2019/input/day07.txt")
       (cs/trim)
       (cs/split #",")
-      (->> (map parse-int))))
+      (->> (map parse-long))))
 
 (def trial1
   "Test program with phase settings yields 43210 in part 1"
