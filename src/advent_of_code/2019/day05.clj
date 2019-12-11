@@ -1,16 +1,17 @@
 (ns advent-of-code.2019.day05
   "Fifth day's solutions for the Advent of Code 2019"
-  (:require [advent-of-code.util :refer [parse-int not-zero? mk-seq un-seq
+  (:require [advent-of-code.util :refer [parse-long not-zero? mk-seq un-seq
                                          parse-bool]]
             [advent-of-code.2019.day02 :refer [vat]]
-            [clojure.string :as cs]))
+            [clojure.string :as cs]
+            [clojure.tools.logging :refer [error errorf info infof warnf debugf]]))
 
 (def puzzle
   "This is the input of the Intcode program to run."
   (-> (slurp "resources/2019/input/day05.txt")
       (cs/trim)
       (cs/split #",")
-      (->> (map parse-int))))
+      (->> (map parse-long))))
 
 (def trial1
   "Test data for the first part of the puzzle"
@@ -26,7 +27,7 @@
   successfully exits."
   [mems & [arg pc]]
   (let [no-io? (not (parse-bool (:io-wait mems)))
-        rbos (atom 0)]
+        rbos (atom (or (:rbos mems) 0))]
     (loop [mem (vec (if (map? mems) (:memory mems) mems))
            ip (or (if (map? mems) (:pc mems) pc) 0)
            ins (if-let [v (if (map? mems) (:input mems) arg)] (mk-seq v))
@@ -54,11 +55,11 @@
                       tgt (adr 1)]
                   (if (or inp no-io?)
                     (recur (st tgt (or inp 0)) (+ 2 ip) (rest ins) outs)
-                    {:output (persistent! outs) :memory mem :input nil :pc ip :state :io-in}))
+                    {:output (persistent! outs) :memory mem :input nil :pc ip :rbos @rbos :state :io-in}))
           4     (let [ov (ld 1)]
                   (if no-io?
                     (recur mem (+ 2 ip) ins (conj! outs ov))
-                    {:output (persistent! (conj! outs ov)) :memory mem :input ins :pc (+ 2 ip) :state :io-out}))
+                    {:output (persistent! (conj! outs ov)) :memory mem :input ins :pc (+ 2 ip) :rbos @rbos :state :io-out}))
           (5 6) (let [tst (ld 1)
                       nip (ld 2)]
                   (recur mem (if ((if (= op 5) not-zero? zero?) tst) nip (+ 3 ip)) ins outs))
@@ -69,8 +70,8 @@
           9     (let [os (ld 1)]
                   (swap! rbos + os)
                   (recur mem (+ 2 ip) ins outs))
-          99    {:output (persistent! outs) :memory mem :input ins :pc ip :state :halt}
-          {:output (persistent! outs) :memory mem :input ins :pc ip :state :exception})))))
+          99    {:output (persistent! outs) :memory mem :input ins :pc ip :rbos @rbos :state :halt}
+          {:output (persistent! outs) :memory mem :input ins :pc ip :rbos @rbos :opcode op :state :exception})))))
 
 (defn yoyo
   "Run a bunch of tests on the trial input. The output should be a series of
@@ -93,10 +94,8 @@
                        999 1105 1 46 1101 1000 1 20 4 20 1105 1 46 98 99] 8]
                      [[3 21 1008 21 8 20 1005 20 22 107 8 21 20 1006 20 31
                        1106 0 36 98 0 0 1002 21 125 20 4 20 1105 1 46 104
-                       999 1105 1 46 1101 1000 1 20 4 20 1105 1 46 98 99] 9]
-                     ]]
-    (prn (un-seq (:output (run mem inp))))
-    ))
+                       999 1105 1 46 1101 1000 1 20 4 20 1105 1 46 98 99] 9]]]
+    (prn (un-seq (:output (run mem inp))))))
 
 (defn bobo
   "Testing out the one simluation looking for an issue. Got it!"
