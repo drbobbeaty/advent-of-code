@@ -360,6 +360,30 @@
       (reduce + (map sum (compact x)))
     :else x))
 
+(defn factors
+  "Function to return the prime factorization of the argument as a sequence."
+  ([n]
+    (factors n 2 ()))
+  ([n k acc]
+    (if (= 1 n)
+      acc
+      (if (= 0 (rem n k))
+        (recur (quot n k) k (cons k acc))
+        (recur n (inc k) acc)))))
+
+(defn lcm
+  "Function to compute the least-common-multiple of all the arguments, by
+  first computing the prime factorization of each, and then gathering up
+  the necessary factors for the LCM, and then multiplying them together."
+  [& args]
+  (let [fm (atom {})]
+    ;; get the minimal factor set for the LCM
+    (doseq [fd (map frequencies (map factors args))
+            [k v] fd]
+      (if (< (get @fm k 0) v) (swap! fm assoc k v)))
+    ;; now make these a sequence again, and multiply together
+    (apply * (apply concat (for [[k v] @fm] (repeat v k))))))
+
 (defn split
   "Function to use the fastest Java string split available, and if there's a
   supplied, non-nil, 'map-from' value then all values in the parsing that match
