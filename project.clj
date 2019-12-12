@@ -8,6 +8,7 @@
   :dependencies [[org.clojure/clojure "1.10.0"]
                  [org.clojure/core.memoize "0.5.8"]
                  [org.clojure/math.combinatorics "0.1.1"]
+                 [org.clojure/math.numeric-tower "0.0.4"]
                  ;; logging with log4j
                  [org.slf4j/slf4j-log4j12 "1.7.5"]
                  [log4j/log4j "1.2.17"]
