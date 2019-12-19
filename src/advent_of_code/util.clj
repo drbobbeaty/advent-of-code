@@ -219,6 +219,7 @@
   types of values."
   [s]
   (cond
+    (char? s)   (first (cs/upper-case s))
     (string? s) (cs/upper-case s)
     (coll? s)   (map ucase s)
     :else       s))
@@ -233,6 +234,7 @@
   types of values."
   [s]
   (cond
+    (char? s)   (first (cs/lower-case s))
     (string? s) (cs/lower-case s)
     (coll? s)   (map lcase s)
     :else       s))
