@@ -71,7 +71,7 @@
            "AND D J"
            "WALK"]))
 
-(defn yoyo
+(defn two
   "Function to 'run' the springbot all over the ship with the long-range
   sensors, and not fall in. The logic was just to add (E || H) to the
   previous logic, and it worked like a charm."
