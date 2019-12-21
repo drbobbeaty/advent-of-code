@@ -17,4 +17,5 @@
                  ;; JSON and time libraries
                  [cheshire "5.6.3"]
                  [clojure.java-time "0.3.2"]
-                 [pandect "0.5.4"]])
+                 [pandect "0.5.4"]]
+  :jvm-opts ["-Xmx1g" "-Xss500m"])
