@@ -1,5 +1,5 @@
 (ns advent-of-code.2019.day21
-  "Twenty first day's solutions for the Advent of Code 2019"
+  "Twenty-first day's solutions for the Advent of Code 2019"
   (:require [advent-of-code.util :refer [parse-long sum is-ascii?]]
             [advent-of-code.2019.day05 :refer [run]]
             [clojure.string :as cs]
