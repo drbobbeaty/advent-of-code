@@ -1,6 +1,7 @@
 (ns advent-of-code.2019.day22
   "Twenty-second day's solutions for the Advent of Code 2019"
   (:require [advent-of-code.util :refer [parse-int]]
+            [clojure.core.memoize :as memo]
             [clojure.string :as cs]
             [clojure.tools.logging :refer [error errorf info infof warnf debugf]]))
 
@@ -90,8 +91,44 @@
   []
   (.indexOf (dealer puzzle (range 10007)) 2019))
 
+(defn xgcd
+  "Extended Euclidean Algorithm. Returns [gcd(a,b) x y] where
+  ax + by = gcd(a,b)."
+  [a b]
+  (if (= a 0)
+    [b 0 1]
+    (let [[g x y] (xgcd (mod b a) a)]
+      [g (- y (* (Math/floorDiv (long b) (long a)) x)) x])))
+
+(defn modinv*
+  "Function that returns the inverse of the modulo value based on the values
+  being coprimes, and that the Extended Euclidean Algorithm is used in the
+  generation. This will make it possible to *reverse* the 'deal with increment'
+  command directly without having to iterate to find the answer."
+  [a b]
+  (let [[g x _] (xgcd a b)]
+    (if (= 1 g) (mod x b))))
+
+(def modinv
+  "Memoized function that returns the inverse of the modulo value based on
+  the values being coprimes, and that the Extended Euclidean Algorithm is
+  used in the generation. This will make it possible to *reverse* the 'deal
+  with increment' command directly without having to iterate to find the
+  answer."
+  (memo/lru modinv* :lru/threshold 200))
+
+(defn modpow
+  "b^e mod m (using Java which solves some cases the pure clojure method
+  has to be modified to tackle--i.e. with large b & e and calculation
+  simplications when gcd(b, m) == 1 and gcd(e, m) == 1)"
+  [b e m]
+  (.modPow (biginteger b) (biginteger e) (biginteger m)))
+
 (defn rdealer
-  ""
+  "Function to reverse the deal stack provided, getting the *starting* position
+  of the card as opposed to the ending position, and to do it efficiently with
+  the coprime function to get the movinv. This is not possible without seeing
+  this, and it was something I certainly had to look up."
   [shs sz fpos]
   (loop [src (reverse shs)
          pos fpos]
@@ -111,39 +148,30 @@
                 (recur (rest src) (+ pos os))
                 (recur (rest src) (- pos aa)))))
         (.startsWith l "deal with increment ")
-          (let [a (parse-int (last (re-matches #"deal with increment (.*)" l)))
-               ]
+          (let [a (parse-int (last (re-matches #"deal with increment (.*)" l)))]
             (if (zero? pos)
               (recur (rest src) 0)
-              (let [idx (first
-                          (for [i (range sz)
-                                :when (= pos (mod (* a i) sz))]
-                            i))
-                   ]
-                (recur (rest src) idx)
-              )
-            )))
+              (recur (rest src) (mod (* pos (bigint (modinv a sz))) sz)))))
       pos)))
 
-(defn bobo
-  ""
+(defn two
+  "Function to calculate the position of the card shuffle when it's done
+  a very large number of times. This was pulled from a hint on the site
+  where a few things I would not have guessed: 1) the process is linear -
+  Face it, it's got a modulo in it - how can this be linear - but I guess
+  the point is that it's linear 'mod sz'... so OK... I guess... and the
+  second was that if you have an 'a*x +b' and you want to perform it
+  'n' times, it's possible to expand it like a polynomial, and then use
+  a 'modpow' function from BigInteger to do the exponentiation. I get
+  it... kinda... but I'll have to remember this craziness..."
   []
-  (map #(rdealer trial4 10 %) (range 10))
-  ; (dealer ["deal with increment 7"] (range 10))
-  )
-
-(defn yoyo
-  ""
-  []
-  (loop [pos 2020
-         cnt 0
-         ans (transient [[0 2020]])]
-    (let [ppos (rdealer puzzle 119315717514047 pos)]
-      (infof "cnt: %d ... ppos: %d" (inc cnt) ppos)
-      (if (and (< cnt 20) (not= ppos 2020))
-        (recur ppos (inc cnt) (conj! ans [(inc cnt) ppos]))
-        (persistent! ans)
-      )
-    )
-  )
-  )
+  (let [n 101741582076661
+        sz 119315717514047
+        f (partial rdealer puzzle sz)
+        x 2020
+        y (f x)
+        z (f y)
+        a (mod (* (- y z) (modinv (+ (- x y) sz) sz)) sz)
+        b (mod (- y (* a x)) sz)
+        q (modpow a n sz)]
+    (long (mod (+ (* q x) (* (- q 1) (modinv (- a 1) sz) b)) sz))))
