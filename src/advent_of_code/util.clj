@@ -7,6 +7,10 @@
 (def not-nil? (complement nil?))
 (def not-zero? (complement zero?))
 
+;; simple definitions to make the code cleaner
+(def min-in-millis (* 60 1000))
+(def hr-in-millis (* 60 60 1000))
+
 (def ascii-0 (int \0))
 (def ascii-9 (int \9))
 (def ascii-punct #{ \( \) \. \; })
