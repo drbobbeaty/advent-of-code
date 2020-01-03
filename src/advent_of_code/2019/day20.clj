@@ -1,6 +1,7 @@
 (ns advent-of-code.2019.day20
   "Twentieth day's solutions for the Advent of Code 2019"
-  (:require [advent-of-code.util :refer [parse-long ucase]]
+  (:require [advent-of-code.util :refer [parse-long ucase lcase hr-in-millis]]
+            [clojure.core.memoize :as memo]
             [clojure.string :as cs]
             [clojure.tools.logging :refer [error errorf info infof warnf debugf]]))
 
@@ -16,7 +17,7 @@
         dy (- y (or (second org) 0))]
     (+ (Math/abs dx) (Math/abs dy))))
 
-(defn encode
+(defn parse-map
   "Function to take the map data for the maze, and convert it into a standard
   map of coordinates and contents - as well as a map of warps: where one [x y]
   takes you another [x y] in one step. This has to go both ways, so the warp
@@ -76,87 +77,87 @@
     (map? data)
       data
     (coll? data)
-      (encode (cs/join "\n" data))))
+      (parse-map (cs/join "\n" data))))
 
-(defn render
-  "Function to render the map as it exists in the argument. The keys are
-  [x y] (col, row) - and the values are the contents to display."
-  [{tiles :tiles warp :warp :as arg}]
-  (let [bts (keys tiles)
-        rows (if (empty? bts) 0 (inc (apply max (map second bts))))
-        cols (if (empty? bts) 0 (inc (apply max (map first bts))))]
-    (concat
-    (for [r (range rows)]
-      (apply str (for [c (range cols)] (get tiles [c r] " "))))
-    warp
-    )))
+; (defn render
+;   "Function to render the map as it exists in the argument. The keys are
+;   [x y] (col, row) - and the values are the contents to display."
+;   [{tiles :tiles warp :warp :as arg}]
+;   (let [bts (keys tiles)
+;         rows (if (empty? bts) 0 (inc (apply max (map second bts))))
+;         cols (if (empty? bts) 0 (inc (apply max (map first bts))))]
+;     (concat
+;     (for [r (range rows)]
+;       (apply str (for [c (range cols)] (get tiles [c r] " "))))
+;     warp
+;     )))
 
 (def puzzle
   "This is the input of the Pluto puzzle."
   (-> (slurp "resources/2019/input/day20.txt")
-      (encode)))
+      (parse-map)))
 
 (def trial1
   "Test data for the first part - it takes 23 steps"
-  (encode ["         A           "
-           "         A           "
-           "  #######.#########  "
-           "  #######.........#  "
-           "  #######.#######.#  "
-           "  #######.#######.#  "
-           "  #######.#######.#  "
-           "  #####  B    ###.#  "
-           "BC...##  C    ###.#  "
-           "  ##.##       ###.#  "
-           "  ##...DE  F  ###.#  "
-           "  #####    G  ###.#  "
-           "  #########.#####.#  "
-           "DE..#######...###.#  "
-           "  #.#########.###.#  "
-           "FG..#########.....#  "
-           "  ###########.#####  "
-           "             Z       "
-           "             Z       "]))
+  (parse-map ["         A           "
+              "         A           "
+              "  #######.#########  "
+              "  #######.........#  "
+              "  #######.#######.#  "
+              "  #######.#######.#  "
+              "  #######.#######.#  "
+              "  #####  B    ###.#  "
+              "BC...##  C    ###.#  "
+              "  ##.##       ###.#  "
+              "  ##...DE  F  ###.#  "
+              "  #####    G  ###.#  "
+              "  #########.#####.#  "
+              "DE..#######...###.#  "
+              "  #.#########.###.#  "
+              "FG..#########.....#  "
+              "  ###########.#####  "
+              "             Z       "
+              "             Z       "]))
 
 (def trial2
   "Test data for the first part - it takes 58 steps"
-  (encode ["                   A               "
-           "                   A               "
-           "  #################.#############  "
-           "  #.#...#...................#.#.#  "
-           "  #.#.#.###.###.###.#########.#.#  "
-           "  #.#.#.......#...#.....#.#.#...#  "
-           "  #.#########.###.#####.#.#.###.#  "
-           "  #.............#.#.....#.......#  "
-           "  ###.###########.###.#####.#.#.#  "
-           "  #.....#        A   C    #.#.#.#  "
-           "  #######        S   P    #####.#  "
-           "  #.#...#                 #......VT"
-           "  #.#.#.#                 #.#####  "
-           "  #...#.#               YN....#.#  "
-           "  #.###.#                 #####.#  "
-           "DI....#.#                 #.....#  "
-           "  #####.#                 #.###.#  "
-           "ZZ......#               QG....#..AS"
-           "  ###.###                 #######  "
-           "JO..#.#.#                 #.....#  "
-           "  #.#.#.#                 ###.#.#  "
-           "  #...#..DI             BU....#..LF"
-           "  #####.#                 #.#####  "
-           "YN......#               VT..#....QG"
-           "  #.###.#                 #.###.#  "
-           "  #.#...#                 #.....#  "
-           "  ###.###    J L     J    #.#.###  "
-           "  #.....#    O F     P    #.#...#  "
-           "  #.###.#####.#.#####.#####.###.#  "
-           "  #...#.#.#...#.....#.....#.#...#  "
-           "  #.#####.###.###.#.#.#########.#  "
-           "  #...#.#.....#...#.#.#.#.....#.#  "
-           "  #.###.#####.###.###.#.#.#######  "
-           "  #.#.........#...#.............#  "
-           "  #########.###.###.#############  "
-           "           B   J   C               "
-           "           U   P   P               "]))
+  (parse-map ["                   A               "
+              "                   A               "
+              "  #################.#############  "
+              "  #.#...#...................#.#.#  "
+              "  #.#.#.###.###.###.#########.#.#  "
+              "  #.#.#.......#...#.....#.#.#...#  "
+              "  #.#########.###.#####.#.#.###.#  "
+              "  #.............#.#.....#.......#  "
+              "  ###.###########.###.#####.#.#.#  "
+              "  #.....#        A   C    #.#.#.#  "
+              "  #######        S   P    #####.#  "
+              "  #.#...#                 #......VT"
+              "  #.#.#.#                 #.#####  "
+              "  #...#.#               YN....#.#  "
+              "  #.###.#                 #####.#  "
+              "DI....#.#                 #.....#  "
+              "  #####.#                 #.###.#  "
+              "ZZ......#               QG....#..AS"
+              "  ###.###                 #######  "
+              "JO..#.#.#                 #.....#  "
+              "  #.#.#.#                 ###.#.#  "
+              "  #...#..DI             BU....#..LF"
+              "  #####.#                 #.#####  "
+              "YN......#               VT..#....QG"
+              "  #.###.#                 #.###.#  "
+              "  #.#...#                 #.....#  "
+              "  ###.###    J L     J    #.#.###  "
+              "  #.....#    O F     P    #.#...#  "
+              "  #.###.#####.#.#####.#####.###.#  "
+              "  #...#.#.#...#.....#.....#.#...#  "
+              "  #.#####.###.###.#.#.#########.#  "
+              "  #...#.#.....#...#.#.#.#.....#.#  "
+              "  #.###.#####.###.###.#.#.#######  "
+              "  #.#.........#...#.............#  "
+              "  #########.###.###.#############  "
+              "           B   J   C               "
+              "           U   P   P               "]))
 
 (defn explore
   "Function to explore the surrounding squares of [x y] and see if we can
@@ -171,7 +172,7 @@
         oob? (fn [[x y]] (or (neg? x) (<= cols x) (neg? y) (<= rows y)))
         mov (for [p [[x (inc y)] [x (dec y)] [(dec x) y] [(inc x) y]]
                   :let [p' (get warp p p)]
-                  :when (not (or (wall (brd p')) (oob? p') (stps p')))
+                  :when (not (or (nil? (brd p')) (wall (brd p')) (oob? p') (stps p')))
                   :let [nstps (assoc stps p' (count stps))]]
               {:stps nstps :pos p'})
         ans (atom [])]
@@ -179,12 +180,73 @@
       (if (= tgt (:pos mi))
         (swap! ans conj {:target tgt :path (assoc (:stps mi) (:pos mi) (count (:stps mi)))})
         (swap! ans concat (explore brd wall warp tgt (:stps mi) (:pos mi)))))
-    @ans))
+    (sort-by #(count (:path %)) @ans)))
 
-(defn one
+(defn distances*
+  "Function to create a map of start/end points and the path information between
+  them. The key is a tuple of [st en] and the value is a map with keys :length.
+  :path."
+  [{brd :tiles wrp :warp :as arg}]
+  (into {}
+    (for [[sk sm] wrp
+          stp (if (map? sm) (vals sm) [sm])
+          [ek em] (for [[k v] wrp :when (not= sk k)] [k v])
+          enp (if (map? em) (vals em) [em])
+          :let [pp (first (explore brd (set " #") {} enp {stp 0} stp))]
+          :when (not-empty pp)]
+      [[sk ek] (assoc (dissoc pp :target) :length (dec (count (:path pp))))])))
+
+(def distances
+  "Memoized function to create a map of start/end points and the path
+  information between them. The key is a tuple of [st en] and the value is
+  a map with keys :length. :path."
+  (memo/lru distances* :lru/threshold 2))
+
+(declare shortest)
+
+(defn shortest*
+  "Function to find the shortest path to the target key, tk, given that we
+  are at the current key, ck, and the remaining possible keys (portals) are
+  in the set, rks."
+  [brd tk ck rks]
+  (cond
+    (= tk ck)
+      0
+    (empty? rks)
+      nil
+    :else
+      (let [pnk (for [[[a b] {len :length pp :path}] (distances brd)
+                      :when (and (= a ck) (rks b))]
+                  [b len])
+            ans (atom nil)]
+        (doseq [[nk nd] pnk
+                :let [rd (shortest brd tk nk (disj rks nk))]
+                :when (some? rd)
+                :let [d (+ nd rd (if (not= nk tk) 1 0))]]
+          (if (or (nil? @ans) (< d @ans))
+            (reset! ans d)))
+        @ans)))
+
+(def shortest
+  "Memoized function to find the shortest path to the target key, tk, given
+  that we are at the current key, ck, and the remaining possible keys
+  (portals) are in the set, rks."
+  (memo/ttl shortest* :ttl/threshold hr-in-millis))
+
+(defn yoyo
   ""
   [& [arg]]
-  (let [{src :tiles wrp :warp} (or arg puzzle)
+  (let [{brd :tiles wrp :warp :as src} (or arg puzzle)
+       ]
+    ; (distances src)
+    (shortest src "ZZ" "AA" (disj (set (keys wrp)) "AA"))
+  )
+  )
+
+(defn brute
+  ""
+  [& [arg]]
+  (let [{src :tiles wrp :warp} (or arg trial1)
         spos (get wrp "AA")
         blk (set " #")
         port (apply merge (filter map? (vals wrp)))]
@@ -193,3 +255,8 @@
          (sort)
          (first))
   ))
+
+(defn one
+  ""
+  []
+  )
