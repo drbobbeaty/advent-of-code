@@ -66,8 +66,8 @@
                                       (<= yb (/ my 2)) [[(- xb 2) (- yb 1)] [(- xb 2) (- yb 2)]]
                                       (< (- my 2) yb)  [[(- xb 2) my]       [(- xb 2) (- my 1)]]
                                       :else            [[(- xb 2) yb]       [(- xb 2) (+ yb 1)]]))]
-                          (recur (remove #(or (= [fc fp] %) (= [sc sp] %)) ps)
-                                 (conj! glob [(str fc sc) (if (= fc sc) (second lpj) lpj)])))
+                          (recur (remove #(= [sc sp] %) (rest ps))
+                                 (conj! glob [(str fc sc) (if (#{"AA" "ZZ"} sk) (second lpj) lpj)])))
                         (persistent! glob)))
                 warp (into {} (for [[k v] (group-by first tks)
                                     :let [trv (map second v)
@@ -78,19 +78,6 @@
       data
     (coll? data)
       (parse-map (cs/join "\n" data))))
-
-; (defn render
-;   "Function to render the map as it exists in the argument. The keys are
-;   [x y] (col, row) - and the values are the contents to display."
-;   [{tiles :tiles warp :warp :as arg}]
-;   (let [bts (keys tiles)
-;         rows (if (empty? bts) 0 (inc (apply max (map second bts))))
-;         cols (if (empty? bts) 0 (inc (apply max (map first bts))))]
-;     (concat
-;     (for [r (range rows)]
-;       (apply str (for [c (range cols)] (get tiles [c r] " "))))
-;     warp
-;     )))
 
 (def puzzle
   "This is the input of the Pluto puzzle."
@@ -177,8 +164,8 @@
               {:stps nstps :pos p'})
         ans (atom [])]
     (doseq [mi mov]
-      (if (= tgt (:pos mi))
-        (swap! ans conj {:target tgt :path (assoc (:stps mi) (:pos mi) (count (:stps mi)))})
+      (if-let [hit (tgt (:pos mi))]
+        (swap! ans conj {:target hit :length (count (:stps mi)) :path (assoc (:stps mi) (:pos mi) (count (:stps mi)))})
         (swap! ans concat (explore brd wall warp tgt (:stps mi) (:pos mi)))))
     (sort-by #(count (:path %)) @ans)))
 
@@ -187,14 +174,18 @@
   them. The key is a tuple of [st en] and the value is a map with keys :length.
   :path."
   [{brd :tiles wrp :warp :as arg}]
-  (into {}
-    (for [[sk sm] wrp
-          stp (if (map? sm) (vals sm) [sm])
-          [ek em] (for [[k v] wrp :when (not= sk k)] [k v])
-          enp (if (map? em) (vals em) [em])
-          :let [pp (first (explore brd (set " #") {} enp {stp 0} stp))]
-          :when (not-empty pp)]
-      [[sk ek] (assoc (dissoc pp :target) :length (dec (count (:path pp))))])))
+  (let [ans (atom {})
+        ppm (into {} (for [[k v] wrp p (if (map? v) (vals v) [v])] [p k]))]
+    (doseq [[sk sm] wrp
+            stp (if (map? sm) (vals sm) [sm])
+            :let [tep (set
+                        (for [[p k] ppm
+                              :when (not (or (= k sk) (contains? @ans [sk k]) (contains? @ans [k sk])))]
+                          p))]
+            dp (explore brd (set " #") {} tep {stp 0} stp)]
+      (infof "[%s %s] - %s" sk (get ppm (:target dp)) (dissoc dp :target))
+      (swap! ans assoc [sk (get ppm (:target dp))] (dissoc dp :target)))
+    @ans))
 
 (def distances
   "Memoized function to create a map of start/end points and the path
@@ -211,18 +202,18 @@
   [brd tk ck rks]
   (cond
     (= tk ck)
-      0
+      -1      ;; this offsets the final 'warp step' that we have in 'explore'
     (empty? rks)
       nil
     :else
       (let [pnk (for [[[a b] {len :length pp :path}] (distances brd)
-                      :when (and (= a ck) (rks b))]
-                  [b len])
+                      :when (or (and (= a ck) (rks b)) (and (= b ck) (rks a)))]
+                  [(if (= a ck) b a) len])
             ans (atom nil)]
         (doseq [[nk nd] pnk
                 :let [rd (shortest brd tk nk (disj rks nk))]
                 :when (some? rd)
-                :let [d (+ nd rd (if (not= nk tk) 1 0))]]
+                :let [d (+ nd rd)]]
           (if (or (nil? @ans) (< d @ans))
             (reset! ans d)))
         @ans)))
@@ -233,30 +224,14 @@
   (portals) are in the set, rks."
   (memo/ttl shortest* :ttl/threshold hr-in-millis))
 
-(defn yoyo
-  ""
-  [& [arg]]
-  (let [{brd :tiles wrp :warp :as src} (or arg puzzle)
-       ]
-    ; (distances src)
-    (shortest src "ZZ" "AA" (disj (set (keys wrp)) "AA"))
-  )
-  )
-
-(defn brute
-  ""
-  [& [arg]]
-  (let [{src :tiles wrp :warp} (or arg trial1)
-        spos (get wrp "AA")
-        blk (set " #")
-        port (apply merge (filter map? (vals wrp)))]
-    (->> (explore src blk port (get wrp "ZZ") {spos 0} spos)
-         (map #(dec (count (:path %))))
-         (sort)
-         (first))
-  ))
-
 (defn one
+  "Function to find the shortest distance from AA to ZZ using the simple
+  distances between warp points, and a memoized path-finding routine."
+  [& [arg]]
+  (let [{brd :tiles wrp :warp :as src} (or arg puzzle)]
+    (shortest src "ZZ" "AA" (disj (set (keys wrp)) "AA"))))
+
+(defn two
   ""
   []
   )
