@@ -2,6 +2,7 @@
   "Twentieth day's solutions for the Advent of Code 2019"
   (:require [advent-of-code.util :refer [parse-long ucase lcase hr-in-millis]]
             [clojure.core.memoize :as memo]
+            [clojure.math.combinatorics :refer [combinations]]
             [clojure.string :as cs]
             [clojure.tools.logging :refer [error errorf info infof warnf debugf]]))
 
@@ -146,6 +147,46 @@
               "           B   J   C               "
               "           U   P   P               "]))
 
+(def trial3
+  "Test data for the second part - it takes 396 steps"
+  (parse-map ["             Z L X W       C                 "
+              "             Z P Q B       K                 "
+              "  ###########.#.#.#.#######.###############  "
+              "  #...#.......#.#.......#.#.......#.#.#...#  "
+              "  ###.#.#.#.#.#.#.#.###.#.#.#######.#.#.###  "
+              "  #.#...#.#.#...#.#.#...#...#...#.#.......#  "
+              "  #.###.#######.###.###.#.###.###.#.#######  "
+              "  #...#.......#.#...#...#.............#...#  "
+              "  #.#########.#######.#.#######.#######.###  "
+              "  #...#.#    F       R I       Z    #.#.#.#  "
+              "  #.###.#    D       E C       H    #.#.#.#  "
+              "  #.#...#                           #...#.#  "
+              "  #.###.#                           #.###.#  "
+              "  #.#....OA                       WB..#.#..ZH"
+              "  #.###.#                           #.#.#.#  "
+              "CJ......#                           #.....#  "
+              "  #######                           #######  "
+              "  #.#....CK                         #......IC"
+              "  #.###.#                           #.###.#  "
+              "  #.....#                           #...#.#  "
+              "  ###.###                           #.#.#.#  "
+              "XF....#.#                         RF..#.#.#  "
+              "  #####.#                           #######  "
+              "  #......CJ                       NM..#...#  "
+              "  ###.#.#                           #.###.#  "
+              "RE....#.#                           #......RF"
+              "  ###.###        X   X       L      #.#.#.#  "
+              "  #.....#        F   Q       P      #.#.#.#  "
+              "  ###.###########.###.#######.#########.###  "
+              "  #.....#...#.....#.......#...#.....#.#...#  "
+              "  #####.#.###.#######.#######.###.###.#.#.#  "
+              "  #.......#.......#.#.#.#.#...#...#...#.#.#  "
+              "  #####.###.#####.#.#.#.#.###.###.#.###.###  "
+              "  #.......#.....#.#...#...............#...#  "
+              "  #############.#.#.###.###################  "
+              "               A O F   N                     "
+              "               A A D   M                     "]))
+
 (defn explore
   "Function to explore the surrounding squares of [x y] and see if we can
   move into them - and if so, see where they lead. This is going to be
@@ -199,23 +240,24 @@
   "Function to find the shortest path to the target key, tk, given that we
   are at the current key, ck, and the remaining possible keys (portals) are
   in the set, rks."
-  [brd tk ck rks]
+  [brd tk ck rks ndist]
   (cond
     (= tk ck)
       -1      ;; this offsets the final 'warp step' that we have in 'explore'
     (empty? rks)
       nil
     :else
-      (let [pnk (for [[[a b] {len :length pp :path}] (distances brd)
+      (let [pnk (for [[[a b] {len :length pp :path}] ndist
                       :when (or (and (= a ck) (rks b)) (and (= b ck) (rks a)))]
                   [(if (= a ck) b a) len])
             ans (atom nil)]
         (doseq [[nk nd] pnk
-                :let [rd (shortest brd tk nk (disj rks nk))]
+                :let [rd (shortest brd tk nk (disj rks nk) ndist)]
                 :when (some? rd)
                 :let [d (+ nd rd)]]
           (if (or (nil? @ans) (< d @ans))
             (reset! ans d)))
+        (if @ans (infof "%s>%s [%d] = %d" ck tk (count rks) @ans))
         @ans)))
 
 (def shortest
@@ -228,8 +270,95 @@
   "Function to find the shortest distance from AA to ZZ using the simple
   distances between warp points, and a memoized path-finding routine."
   [& [arg]]
-  (let [{brd :tiles wrp :warp :as src} (or arg puzzle)]
-    (shortest src "ZZ" "AA" (disj (set (keys wrp)) "AA"))))
+  (let [{brd :tiles wrp :warp :as src} (or arg puzzle)
+        ports (disj (set (keys wrp)) "AA")]
+    (shortest src "ZZ" "AA" ports (distances src))))
+
+(defn refold*
+  ""
+  [{brd :tiles wrp :warp :as arc}]
+  (let [bts (keys brd)
+        rmax (if (empty? bts) 0 (apply max (map second bts)))
+        cmax (if (empty? bts) 0 (apply max (map first bts)))
+        updn (fn [[x y]]
+               (if (or (zero? x) (= cmax x) (zero? y) (= rmax y)) -1 1))]
+    (for [[k v] wrp
+          p (if (map? v) (vals v) [v])]
+      {:loc p :tag k :dir (if (map? v) (updn p) 0)})))
+
+(def refold
+  "Memoized "
+  (memo/ttl refold* :ttl/threshold hr-in-millis))
+
+(defn redistances*
+  ""
+  [{brd :tiles wrp :warp :as arg}]
+  (let [rf (refold arg)
+       ]
+    (into {}
+      (for [[k {l :length p :path}] (distances arg)
+            :let [fpp (first (first (filter #(= 0 (second %)) p)))
+                  fpmd (first (filter #(= fpp (:loc %)) rf))
+                  [fpd fpt] (map fpmd [:dir :tag])
+                  lpp (first (first (filter #(= l (second %)) p)))
+                  lpmd (first (filter #(= lpp (:loc %)) rf))
+                  [lpd lpt] (map lpmd [:dir :tag])
+                 ]
+           ]
+        [k {:length l :path p fpt fpd lpt lpd}]
+      ))))
+
+(def redistances
+  "Memoized function "
+  (memo/ttl redistances* :ttl/threshold hr-in-millis))
+
+(defn build-levels
+  ""
+  [& [arg]]
+  (let [{brd :tiles wrp :warp :as src} (or arg trial1)
+        rf (refold src)
+        rd (redistances src)
+        rdd (fn [a b] (or (get rd [a b]) (get rd [b a])))
+        lvl (atom 0)
+        ans (atom {})
+        need? (fn [[a b]] (not (or (contains? @ans [a b]) (contains? @ans [b a]))))
+        lbl (fn [s n] (str s (if (pos? n) n)))
+       ]
+    (doseq [{cp :loc cd :dir ct :tag} (filter #(= 0 (:dir %)) rf)
+            {np :loc nd :dir nt :tag} (remove #(= -1 (:dir %)) rf)
+            :let [ctl (lbl ct (+ @lvl cd))
+                  ntl (lbl nt (+ @lvl nd))
+                  {ed :length} (rdd ct nt)]
+            :when (and (need? [ctl ntl]) ed)]
+      (swap! ans assoc [ctl ntl] {:length ed :path nil}))
+    (doseq [lc (range 11)]
+      (swap! lvl inc)
+      (doseq [[{cp :loc cd :dir ct :tag} {np :loc nd :dir nt :tag}] (combinations (remove #(= 0 (:dir %)) rf) 2)
+              :when (not= ct nt)
+              :let [ctl (lbl ct (+ @lvl (max 0 cd)))
+                    ntl (lbl nt (+ @lvl (max 0 nd)))
+                    {ed :length cpd ct npd nt} (rdd ct nt)]
+              :when (and (= cd cpd) (= nd npd) (need? [ctl ntl]) ed)]
+        (swap! ans assoc [ctl ntl] {:length ed :path nil})
+      )
+    )
+    @ans
+  ))
+
+(defn toto
+  "Function to find the shortest distance from AA to ZZ using the simple
+  distances between warp points, and a memoized path-finding routine."
+  [& [arg]]
+  (let [{brd :tiles wrp :warp :as src} (or arg trial3)
+        all (build-levels src)
+        ports (disj (set (distinct (flatten (keys all)))) "AA")
+       ]
+    ; wrp
+    ; (filter #(= "OA" (:tag %)) (refold src))
+    ; (refold src)
+    ; (for [[[a b] v] all :when (or (.startsWith a "XF") (.startsWith b "XF"))] [[a b] v])
+    (shortest src "ZZ" "AA" ports all)
+    ))
 
 (defn two
   ""
