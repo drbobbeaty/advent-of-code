@@ -44,7 +44,7 @@ ideas. But still... this is a lot better than I've done in the past.
 
 ## 2019
 
-I got stuck on Day 18 and Day 20 - bother because of computational complexity.
+I got stuck on Day 18 and Day 20 - both because of computational complexity.
 Both were pathing problems, and I really had to buck up and learn Dijkstra's as
 well as the Breadth-First Search that does things differently, but can be used
 to find distances in mazes, etc. I'm glad I pushed through and learned these
