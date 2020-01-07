@@ -1,8 +1,7 @@
 (ns advent-of-code.2019.day20
   "Twentieth day's solutions for the Advent of Code 2019"
-  (:require [advent-of-code.util :refer [parse-long ucase lcase hr-in-millis]]
-            [clojure.core.memoize :as memo]
-            [clojure.math.combinatorics :refer [combinations]]
+  (:require [advent-of-code.util :refer [parse-long]]
+            [clojure.set :refer [union]]
             [clojure.string :as cs]
             [clojure.tools.logging :refer [error errorf info infof warnf debugf]]))
 
@@ -187,180 +186,54 @@
               "               A O F   N                     "
               "               A A D   M                     "]))
 
-(defn explore
-  "Function to explore the surrounding squares of [x y] and see if we can
-  move into them - and if so, see where they lead. This is going to be
-  called recursively to walk every possible path until we get to one of
-  the targets (tgt), and then we'll stop - indicating the path we took to
-  get here, and what it is we hit."
-  [brd wall warp tgt stps [x y]]
-  (let [bts (keys brd)
-        rows (if (empty? bts) 0 (inc (apply max (map second bts))))
-        cols (if (empty? bts) 0 (inc (apply max (map first bts))))
-        oob? (fn [[x y]] (or (neg? x) (<= cols x) (neg? y) (<= rows y)))
-        mov (for [p [[x (inc y)] [x (dec y)] [(dec x) y] [(inc x) y]]
-                  :let [p' (get warp p p)]
-                  :when (not (or (nil? (brd p')) (wall (brd p')) (oob? p') (stps p')))
-                  :let [nstps (assoc stps p' (count stps))]]
-              {:stps nstps :pos p'})
-        ans (atom [])]
-    (doseq [mi mov]
-      (if-let [hit (tgt (:pos mi))]
-        (swap! ans conj {:target hit :length (count (:stps mi)) :path (assoc (:stps mi) (:pos mi) (count (:stps mi)))})
-        (swap! ans concat (explore brd wall warp tgt (:stps mi) (:pos mi)))))
-    (sort-by #(count (:path %)) @ans)))
-
-(defn distances*
-  "Function to create a map of start/end points and the path information between
-  them. The key is a tuple of [st en] and the value is a map with keys :length.
-  :path."
-  [{brd :tiles wrp :warp :as arg}]
-  (let [ans (atom {})
-        ppm (into {} (for [[k v] wrp p (if (map? v) (vals v) [v])] [p k]))]
-    (doseq [[sk sm] wrp
-            stp (if (map? sm) (vals sm) [sm])
-            :let [tep (set
-                        (for [[p k] ppm
-                              :when (not (or (= k sk) (contains? @ans [sk k]) (contains? @ans [k sk])))]
-                          p))]
-            dp (explore brd (set " #") {} tep {stp 0} stp)]
-      (infof "[%s %s] - %s" sk (get ppm (:target dp)) (dissoc dp :target))
-      (swap! ans assoc [sk (get ppm (:target dp))] (dissoc dp :target)))
-    @ans))
-
-(def distances
-  "Memoized function to create a map of start/end points and the path
-  information between them. The key is a tuple of [st en] and the value is
-  a map with keys :length. :path."
-  (memo/lru distances* :lru/threshold 2))
-
-(declare shortest)
-
-(defn shortest*
-  "Function to find the shortest path to the target key, tk, given that we
-  are at the current key, ck, and the remaining possible keys (portals) are
-  in the set, rks."
-  [brd tk ck rks ndist]
-  (cond
-    (= tk ck)
-      -1      ;; this offsets the final 'warp step' that we have in 'explore'
-    (empty? rks)
-      nil
-    :else
-      (let [pnk (for [[[a b] {len :length pp :path}] ndist
-                      :when (or (and (= a ck) (rks b)) (and (= b ck) (rks a)))]
-                  [(if (= a ck) b a) len])
-            ans (atom nil)]
-        (doseq [[nk nd] pnk
-                :let [rd (shortest brd tk nk (disj rks nk) ndist)]
-                :when (some? rd)
-                :let [d (+ nd rd)]]
-          (if (or (nil? @ans) (< d @ans))
-            (reset! ans d)))
-        (if @ans (infof "%s>%s [%d] = %d" ck tk (count rks) @ans))
-        @ans)))
-
-(def shortest
-  "Memoized function to find the shortest path to the target key, tk, given
-  that we are at the current key, ck, and the remaining possible keys
-  (portals) are in the set, rks."
-  (memo/ttl shortest* :ttl/threshold hr-in-millis))
-
-(defn one
-  "Function to find the shortest distance from AA to ZZ using the simple
-  distances between warp points, and a memoized path-finding routine."
-  [& [arg]]
-  (let [{brd :tiles wrp :warp :as src} (or arg puzzle)
-        ports (disj (set (keys wrp)) "AA")]
-    (shortest src "ZZ" "AA" ports (distances src))))
-
-(defn refold*
-  ""
-  [{brd :tiles wrp :warp :as arc}]
+(defn bfs
+  "Function to complete a breadth-first search (BFS) of the board with the
+  set of wall pieces, and the warp map for jumping around. The target and
+  starting positions are given as well. There is an optional parameter for
+  using the recursive warp jumps in part 2 of the day's puzzle."
+  [brd wall warp tgt pos & [rec]]
   (let [bts (keys brd)
         rmax (if (empty? bts) 0 (apply max (map second bts)))
         cmax (if (empty? bts) 0 (apply max (map first bts)))
-        updn (fn [[x y]]
-               (if (or (zero? x) (= cmax x) (zero? y) (= rmax y)) -1 1))]
-    (for [[k v] wrp
-          p (if (map? v) (vals v) [v])]
-      {:loc p :tag k :dir (if (map? v) (updn p) 0)})))
+        oob? (fn [[x y]] (or (neg? x) (< cmax x) (neg? y) (< rmax y)))
+        updn (fn [p] (if (oob? p) -1 1))
+        [px py] pos
+        fin (concat tgt [0])]
+    (loop [pts [[px py 0 0]]        ;; [x y lvl len]
+           visit (set [[px py 0]])] ;; [x y lvl]
+      (when-let [[x y lvl len] (first pts)]
+        (if (= fin [x y lvl])
+          len
+          (let [mov (for [p [[x (inc y)] [x (dec y)] [(dec x) y] [(inc x) y]]
+                          :let [p' (if (and (zero? lvl) (oob? p)) p (get warp p p))
+                                nl (if (and rec (not= p p')) (+ lvl (updn p)) lvl)]
+                          :when (not (or (nil? (brd p')) (wall (brd p')) (oob? p')))
+                          :let [ps (concat p' [nl])]
+                          :when (not (visit ps))]
+                      ps)]
+            (recur
+              (concat (rest pts) (map (fn [[x y nl]] [x y nl (inc len)]) mov))
+              (union visit (set mov)))))))))
 
-(def refold
-  "Memoized "
-  (memo/ttl refold* :ttl/threshold hr-in-millis))
-
-(defn redistances*
-  ""
-  [{brd :tiles wrp :warp :as arg}]
-  (let [rf (refold arg)
-       ]
-    (into {}
-      (for [[k {l :length p :path}] (distances arg)
-            :let [fpp (first (first (filter #(= 0 (second %)) p)))
-                  fpmd (first (filter #(= fpp (:loc %)) rf))
-                  [fpd fpt] (map fpmd [:dir :tag])
-                  lpp (first (first (filter #(= l (second %)) p)))
-                  lpmd (first (filter #(= lpp (:loc %)) rf))
-                  [lpd lpt] (map lpmd [:dir :tag])
-                 ]
-           ]
-        [k {:length l :path p fpt fpd lpt lpd}]
-      ))))
-
-(def redistances
-  "Memoized function "
-  (memo/ttl redistances* :ttl/threshold hr-in-millis))
-
-(defn build-levels
-  ""
+(defn one
+  "Function to find the shortest distance from AA to ZZ using a simple BFS
+  search through the maze. We simply want to find the shortest length, and
+  don't care about the path this time."
   [& [arg]]
-  (let [{brd :tiles wrp :warp :as src} (or arg trial1)
-        rf (refold src)
-        rd (redistances src)
-        rdd (fn [a b] (or (get rd [a b]) (get rd [b a])))
-        lvl (atom 0)
-        ans (atom {})
-        need? (fn [[a b]] (not (or (contains? @ans [a b]) (contains? @ans [b a]))))
-        lbl (fn [s n] (str s (if (pos? n) n)))
-       ]
-    (doseq [{cp :loc cd :dir ct :tag} (filter #(= 0 (:dir %)) rf)
-            {np :loc nd :dir nt :tag} (remove #(= -1 (:dir %)) rf)
-            :let [ctl (lbl ct (+ @lvl cd))
-                  ntl (lbl nt (+ @lvl nd))
-                  {ed :length} (rdd ct nt)]
-            :when (and (need? [ctl ntl]) ed)]
-      (swap! ans assoc [ctl ntl] {:length ed :path nil}))
-    (doseq [lc (range 11)]
-      (swap! lvl inc)
-      (doseq [[{cp :loc cd :dir ct :tag} {np :loc nd :dir nt :tag}] (combinations (remove #(= 0 (:dir %)) rf) 2)
-              :when (not= ct nt)
-              :let [ctl (lbl ct (+ @lvl (max 0 cd)))
-                    ntl (lbl nt (+ @lvl (max 0 nd)))
-                    {ed :length cpd ct npd nt} (rdd ct nt)]
-              :when (and (= cd cpd) (= nd npd) (need? [ctl ntl]) ed)]
-        (swap! ans assoc [ctl ntl] {:length ed :path nil})
-      )
-    )
-    @ans
-  ))
-
-(defn toto
-  "Function to find the shortest distance from AA to ZZ using the simple
-  distances between warp points, and a memoized path-finding routine."
-  [& [arg]]
-  (let [{brd :tiles wrp :warp :as src} (or arg trial3)
-        all (build-levels src)
-        ports (disj (set (distinct (flatten (keys all)))) "AA")
-       ]
-    ; wrp
-    ; (filter #(= "OA" (:tag %)) (refold src))
-    ; (refold src)
-    ; (for [[[a b] v] all :when (or (.startsWith a "XF") (.startsWith b "XF"))] [[a b] v])
-    (shortest src "ZZ" "AA" ports all)
-    ))
+  (let [{brd :tiles wrp :warp :as src} (or arg puzzle)
+        aa (get wrp "AA")
+        zz (get wrp "ZZ")
+        wm (apply merge (for [[k v] wrp :when (map? v)] v))]
+    (bfs brd (set " #") wm zz aa)))
 
 (defn two
-  ""
-  []
-  )
+  "Function to find the shortest distance from AA to ZZ using a simple BFS
+  search through the maze - but this time each warp can take us up or down
+  a level, so it's massively recursive. We simply want to find the shortest
+  length, and don't care about the path this time."
+  [& [arg]]
+  (let [{brd :tiles wrp :warp :as src} (or arg puzzle)
+        aa (get wrp "AA")
+        zz (get wrp "ZZ")
+        wm (apply merge (for [[k v] wrp :when (map? v)] v))]
+    (bfs brd (set " #") wm zz aa true)))
