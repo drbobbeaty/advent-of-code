@@ -42,6 +42,17 @@ done, and I have looked at the solutions for some, and they make no sense, so
 I think I'm going to have to figure this out by reading and working on a few
 ideas. But still... this is a lot better than I've done in the past.
 
+## 2019
+
+I got stuck on Day 18 and Day 20 - bother because of computational complexity.
+Both were pathing problems, and I really had to buck up and learn Dijkstra's as
+well as the Breadth-First Search that does things differently, but can be used
+to find distances in mazes, etc. I'm glad I pushed through and learned these
+two concepts by beating on them - I'm a better coder because of it.
+
+The other days were not too bad, and while it took a few extra days to get
+Day 18 and Day 20, it was *_really_* worth it.
+
 ## License
 
 Copyright © 2015-2018 Bob Beaty
