@@ -191,17 +191,16 @@
   set of wall pieces, and the warp map for jumping around. The target and
   starting positions are given as well. There is an optional parameter for
   using the recursive warp jumps in part 2 of the day's puzzle."
-  [brd wall warp tgt pos & [rec]]
+  [brd wall warp [tx ty] [px py] & [rec]]
   (let [bts (keys brd)
         rmax (if (empty? bts) 0 (apply max (map second bts)))
         cmax (if (empty? bts) 0 (apply max (map first bts)))
         oob? (fn [[x y]] (or (neg? x) (< cmax x) (neg? y) (< rmax y)))
         updn (fn [p] (if (oob? p) -1 1))
-        [px py] pos
-        fin (concat tgt [0])]
+        fin [tx ty 0]]
     (loop [pts [[px py 0 0]]        ;; [x y lvl len]
            visit (set [[px py 0]])] ;; [x y lvl]
-      (when-let [[x y lvl len] (first pts)]
+      (if-let [[x y lvl len] (first pts)]
         (if (= fin [x y lvl])
           len
           (let [mov (for [p [[x (inc y)] [x (dec y)] [(dec x) y] [(inc x) y]]
