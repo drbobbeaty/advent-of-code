@@ -55,7 +55,7 @@ Day 18 and Day 20, it was *_really_* worth it.
 
 ## License
 
-Copyright © 2015-2018 Bob Beaty
+Copyright © 2015-2019 Bob Beaty
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
