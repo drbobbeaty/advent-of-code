@@ -1,0 +1,6 @@
+image:
+  file: Dockerfile
+tasks:
+  - init: echo "Adding the tools I need - clojure"
+    command: |
+      brew install leiningen
