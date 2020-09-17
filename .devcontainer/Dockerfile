@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/vscode/devcontainers/java:dev-8
+FROM mcr.microsoft.com/vscode/devcontainers/base:focal
 
 # [Option] Install Maven
 ARG INSTALL_MAVEN="false"
@@ -16,7 +16,7 @@ RUN if [ "${INSTALL_NODE}" = "true" ]; then su vscode -c "source /usr/local/shar
 
 # [Optional] Uncomment this section to install additional OS packages.
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -y install --no-install-recommends leiningen
+    && apt-get -y install --no-install-recommends openjdk-11-jdk leiningen
 
 # [Optional] Uncomment this line to install global node packages.
 # RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && npm install -g <your-package-here>" 2>&1
