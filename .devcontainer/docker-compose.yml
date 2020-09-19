@@ -1,4 +1,4 @@
-version: '3'
+version: "3.0"
 
 services:
   app:
@@ -6,7 +6,7 @@ services:
       context: ..
       dockerfile: .devcontainer/Dockerfile
       args:
-        VARIANT: 3
+        VARIANT: focal
         # On Linux, you may need to update USER_UID and USER_GID below if not your local UID is not 1000.
         USER_UID: 1000
         USER_GID: 1000
