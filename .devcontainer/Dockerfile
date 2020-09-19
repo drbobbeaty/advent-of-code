@@ -1,6 +1,6 @@
 # Update the VARIANT arg in docker-compose.yml to pick Ubuntu version
 ARG VARIANT=focal
-FROM mcr.microsoft.com/vscode/devcontainers/ubuntu:${VARIANT}
+FROM mcr.microsoft.com/vscode/devcontainers/base:${VARIANT}
 
 # Update args in docker-compose.yaml to set the UID/GID of the "vscode" user.
 ARG USER_UID=1000
