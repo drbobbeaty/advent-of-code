@@ -1,18 +1,14 @@
+// Update the VARIANT arg in docker-compose.yml to pick Ubuntu version
 {
-	"name": "Clojure on JDK 11",
-    "dockerComposeFile": "docker-compose.yml",
-    "service": "app",
+	"name": "Clojure on JDK 11 & PostgreSQL",
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "app",
+	"workspaceFolder": "/workspace",
 
 	// Set *default* container specific settings.json values on container create.
 	"settings": { 
 		"terminal.integrated.shell.linux": "/bin/bash",
-		"java.home": "/docker-java-home",
-		"java.configuration.runtimes": [{
-			"default": true,
-			"name": "JavaSE-11",
-			"path": "/usr/local/sdkman/candidates/java/current"
-		}],
-   		"sqltools.connections": [{
+		"sqltools.connections": [{
 			"name": "Container database",
 			"driver": "PostgreSQL",
 			"previewLimit": 50,
@@ -23,18 +19,18 @@
 			"password": "postgres"
 		}]
 	},
-	
+
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
-		"vscjava.vscode-java-pack"
-	],
+        "vscjava.vscode-java-pack"
+	]
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	"forwardPorts": [5432]
+	"forwardPorts": [5432],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "java -version",
+	// "postCreateCommand": "yarn install",
 
 	// Uncomment to connect as a non-root user. See https://aka.ms/vscode-remote/containers/non-root.
-	// "remoteUser": "vscode"
+	"remoteUser": "vscode"
 }
