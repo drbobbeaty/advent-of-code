@@ -1,12 +1,8 @@
 {
-	"name": "Java 8",
+	"name": "Java 11",
 	"build": {
 		"dockerfile": "Dockerfile",
 		"args": {
-			"INSTALL_MAVEN": "false",
-			"INSTALL_GRADLE": "false",
-			"INSTALL_NODE": "false",
-			"NODE_VERSION": "lts/*"
 		}
 	},
 
@@ -17,7 +13,7 @@
 		"java.import.gradle.java.home": "/usr/local/sdkman/candidates/java/current",
 		"java.configuration.runtimes": [{
 			"default": true,
-			"name": "JavaSE-1.8",
+			"name": "JavaSE-11",
 			"path": "/usr/local/sdkman/candidates/java/current"
 		}]
 	},
@@ -28,7 +24,7 @@
 	]
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [],
+	"forwardPorts": ["5432"],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "postCreateCommand": "java -version",
