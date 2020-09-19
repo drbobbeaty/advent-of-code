@@ -8,6 +8,7 @@ services:
       args:
         VARIANT: focal
         # On Linux, you may need to update USER_UID and USER_GID below if not your local UID is not 1000.
+        USERNAME: vscode
         USER_UID: 1000
         USER_GID: 1000
 
