@@ -25,6 +25,6 @@ RUN groupadd --gid $USER_GID $USERNAME \
 # ********************************************************
 
 # [Optional] Set the default user. Omit if you want to keep the default as root.
-# USER $USERNAME
-USER vscode
+USER $USERNAME
+# USER vscode
 
