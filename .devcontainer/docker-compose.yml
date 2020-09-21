@@ -7,10 +7,11 @@ services:
       dockerfile: Dockerfile
       args:
         # [Choice] Ubuntu version
-        VARIANT: focal
+        OS: focal
         # On Linux, you may need to update USER_UID and USER_GID below if not your local UID is not 1000.
-        USER_UID: 1000
-        USER_GID: 1000
+        USERNAME: drbob
+        USER_UID: 1001
+        USER_GID: 1001
 
     volumes:
       - ..:/workspace:cached
