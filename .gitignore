@@ -12,3 +12,4 @@ pom.xml.asc
 *.swp
 *.swo
 /.cpcache
+.rebel_readline_history
