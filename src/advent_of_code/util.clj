@@ -102,6 +102,23 @@
   [c]
   (<= 32 (int c) 127))
 
+(defn xor
+  "Function to compuet the xor of the arguments, as evaluated. If only one form
+  returns a logical true value (neither nil nor false), returns true. If more
+  than one value returns logical true or no value returns logical true, retuns
+  a logical false value. As soon as two logically true forms are encountered,
+  no remaining work is done. (xor) returns false."
+  [& arg]
+  (loop [ans false
+         src arg]
+    (if (pos? (count src))
+      (let [f (first src)]
+        (cond
+          (and ans f) false
+          (and (not ans) f) (recur true (rest src))
+          :else (recur ans (rest src))))
+      ans)))
+
 (defn nil-if-empty
   "Function to ensure that if we have an empty string, map or collection,
   it's converted to a nil so that there are no empty strings, maps or
