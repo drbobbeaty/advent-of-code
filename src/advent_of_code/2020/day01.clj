@@ -16,18 +16,18 @@
   [1721 979 366 299 675 1456])
 
 (defn one
-  "Function to sum all the fuel requirements for all the modules args"
-  [& coll]
+  "Function to find the two entries that sum to 2020, and then return the
+  product of those two numbers. The elves need it."
+  [& [coll]]
   (first
     (for [[a b] (combinations (or coll puzzle) 2)
           :when (= 2020 (+ a b))]
       (* a b))))
 
 (defn two
-  "Function to sum all fuel requirements assuming the recursive formula
-  where all the fuel also has mass, and we need to inlude all that mass
-  and fuel in the calculation."
-  [& coll]
+  "Function to find the three entries that sum to 2020, and then return the
+  product of those three numbers. The elves this too."
+  [& [coll]]
   (first
     (for [[a b c] (combinations (or coll puzzle) 3)
           :when (= 2020 (+ a b c))]
