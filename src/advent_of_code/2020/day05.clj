@@ -54,3 +54,25 @@
         h (apply max filled)]
     (for [i (range l (inc h)) :when (not (filled i))]
       i)))
+
+;; ----- Alternate Solution
+
+(defn to-id
+  "Function to take a boarding pass and convert it into a seat ID by noting
+  that the F and L are 0, and the others are 1, and then just parse an int
+  out of the result. The problem is fun, but this is faster."
+  [pass]
+  (Integer/parseInt (apply str (map #(if (#{\F \L} %) \0 \1) pass)) 2))
+
+(defn alt
+  "Function to use the to-id function to solve the two parts of today's
+  puzzle realizing that we don't need anything but the seat IDs, and then,
+  we can simply use to-id to calculate those, and then use the fact that
+  part one is really used in part two as a limit, and it all falls out
+  rather easily."
+  [& [coll]]
+  (let [all (set (map to-id (or coll puzzle)))
+        l (apply min all)
+        one (apply max all)
+        two (for [i (range l (inc one)) :when (not (all i))] i)]
+    {:one one :two two}))
