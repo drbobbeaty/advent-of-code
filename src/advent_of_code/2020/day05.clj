@@ -6,8 +6,8 @@
 (def puzzle
   "This is the input of the boarding passes that are scanned by my phone."
   (-> (slurp "resources/2020/input/day05.txt")
-      (cs/trim)
-      (cs/split #"\n")))
+      (trim)
+      (split #"\n")))
 
 (def test1
   "Test data for the first part."

@@ -1,7 +1,6 @@
 (ns advent-of-code.2020.day04
   "Fourth day's solutions for the Advent of Code 2020"
-  (:require [advent-of-code.util :refer [parse-int trim split]]
-            [clojure.string :as cs]))
+  (:require [advent-of-code.util :refer [parse-int trim split]]))
 
 (defn collect
   "Function to collect the source data into one line per passport. This is
@@ -31,8 +30,8 @@
 (def puzzle
   "This is the input the pattern of the trees on the way to the airport."
   (-> (slurp "resources/2020/input/day04.txt")
-      (cs/trim)
-      (cs/split #"\n")
+      (trim)
+      (split #"\n")
       (collect)
       (->> (map parse))))
 

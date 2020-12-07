@@ -1,13 +1,12 @@
 (ns advent-of-code.2020.day03
   "Third day's solutions for the Advent of Code 2020"
-  (:require [advent-of-code.util :refer [parse-int xor]]
-            [clojure.string :as cs]))
+  (:require [advent-of-code.util :refer [parse-int xor trim split]]))
 
 (def puzzle
   "This is the input the pattern of the trees on the way to the airport."
   (-> (slurp "resources/2020/input/day03.txt")
-      (cs/trim)
-      (cs/split #"\n")))
+      (trim)
+      (split #"\n")))
 
 (def test1
   "Test data for the first part."

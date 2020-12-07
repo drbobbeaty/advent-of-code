@@ -1,14 +1,13 @@
 (ns advent-of-code.2020.day01
   "First day's solutions for the Advent of Code 2020"
-  (:require [advent-of-code.util :refer [parse-int]]
-            [clojure.math.combinatorics :refer [combinations]]
-            [clojure.string :as cs]))
+  (:require [advent-of-code.util :refer [parse-int trim split]]
+            [clojure.math.combinatorics :refer [combinations]]))
 
 (def puzzle
   "This is the input of the masses of the modules for the ship."
   (-> (slurp "resources/2020/input/day01.txt")
-      (cs/trim)
-      (cs/split #"\n")
+      (trim)
+      (split #"\n")
       (->> (map #(parse-int %)))))
 
 (def test1

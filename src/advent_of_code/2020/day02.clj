@@ -1,7 +1,6 @@
 (ns advent-of-code.2020.day02
   "Second day's solutions for the Advent of Code 2020"
-  (:require [advent-of-code.util :refer [parse-int xor]]
-            [clojure.string :as cs]))
+  (:require [advent-of-code.util :refer [parse-int xor trim split]]))
 
 (defn parse
   "Function to take a raw string of the input from the shopkeeper about the
@@ -16,8 +15,8 @@
 (def puzzle
   "This is the input of the masses of the modules for the ship."
   (-> (slurp "resources/2020/input/day02.txt")
-      (cs/trim)
-      (cs/split #"\n")
+      (trim)
+      (split #"\n")
       (->> (map parse))))
 
 (def test1
