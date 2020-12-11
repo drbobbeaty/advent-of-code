@@ -1,9 +1,5 @@
 # Advent of Code
 
-[![Run on Repl.it](https://repl.it/badge/github/drbobbeaty/advent-of-code)](https://repl.it/github/drbobbeaty/advent-of-code)
-
-[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/drbobbeaty/advent-of-code) 
-
 Just my solutions to the problems at [Advent of Code](https://adventofcode.com),
 which a [friend](https://github.com/hby/) introduced me to in 2015. It has been
 a fun way to push the usage of Clojure to stateful, and more traditionally
