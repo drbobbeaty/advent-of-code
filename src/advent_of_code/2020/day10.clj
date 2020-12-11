@@ -36,27 +36,19 @@
   "Function to count the potential drops in the sequence based on the joltage
   difference of 3. This is an ugly brute-force method that loops over all
   the possible drops in the sequence, and does it for single- and double-
-  drops."
-  [coll]
-  (let [one (fn [arg]
-              (loop [src arg
-                     drops 0]
-                (if (<= 3 (count src))
-                  (let [[l _ h] (take 3 src)]
-                    (if (<= (- h l) 3)
-                      (recur (rest src) (+ (inc drops) (cnt-drops (drop 2 src))))
-                      (recur (rest src) drops)))
-                  drops)))
-        two (fn [arg]
-              (loop [src arg
-                     drops 0]
-                (if (<= 4 (count src))
-                  (let [[l _ _ h] (take 4 src)]
-                    (if (<= (- h l) 3)
-                      (recur (rest src) (+ (inc drops) (cnt-drops (drop 3 src))))
-                      (recur (rest src) drops)))
-                  drops)))]
-    (+ (one coll) (two coll))))
+  drops. The collection is the remaining sequence to scan, and the 'sz' is
+  3 for single-number drops, and 4 for double-number drops. These are the
+  sizes of the first 'n' elements to test for the potential drop(s)."
+  [coll sz]
+  (loop [src coll
+         drops 0]
+    (if (<= sz (count src))
+      (let [ss (take sz src)]
+        (if (<= (- (last ss) (first ss)) 3)
+          (let [rsrc (drop (dec sz) src)]
+            (recur (rest src) (+ (inc drops) (cnt-drops rsrc 3) (cnt-drops rsrc 4))))
+          (recur (rest src) drops)))
+      drops)))
 
 (defn two
   "Function to find out how many sequences of adapters can be made from
@@ -67,5 +59,5 @@
   (let [inp (or coll puzzle)]
     (->> (concat [0] (sort inp) [(+ 3 (apply max inp))])
          (partition-on-diff 3)
-         (map #(inc (cnt-drops %)))
+         (map #(+ 1 (cnt-drops % 3) (cnt-drops % 4)))
          (apply *))))
