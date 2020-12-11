@@ -431,3 +431,21 @@
       (if map-from
         (mapv #(if (= map-from %) map-to %) lst)
         (vec lst)))))
+
+(defn partition-on-diff
+  "Function to partition the collection into sequences based on the numerical
+  difference between the elements - and the threshold is the provided 'dx'.
+  So:
+    (partition-on-diff 3 [1 2 3 6 7 8])
+    => ([1 2 3] [6 7 8])
+  "
+  [dx coll]
+  (loop [src (rest coll)
+         prev (first coll)
+         ans (transient [])
+         lst (transient [(first coll)])]
+    (if-let [f (first src)]
+      (if (<= 3 (- f prev))
+        (recur (rest src) f (conj! ans (persistent! lst)) (transient [f]))
+        (recur (rest src) f ans (conj! lst f)))
+      (persistent! (conj! ans (persistent! lst))))))
