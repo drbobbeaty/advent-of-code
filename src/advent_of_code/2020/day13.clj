@@ -32,34 +32,23 @@
          (first))))
 
 (defn two
-  "Function to "
+  "Function to find when they are all lined up based on their spacing in the
+  schedule. This was a problem I needed help on, and Bret's solution was
+  quite elegant, and I need to do a lot more reading on this subject."
   [& [m]]
-  (let [{st :start bs :buses :as arg} (or m test1)
-        [[os bf] & mre] (->> (map vector (range) bs)
-                             (remove #(zero? (second %)))
-                             (sort-by second)
-                             (reverse))
-        hit? (fn [[os f] t] (= 0 (mod (+ os t) f)))
-       ]
-    (first
-      (for [i (map inc (range))
-            :let [t (- (* i bf) os)]
-            :when (every? #(hit? % t) mre)
-           ]
-        t
-      )
-    )
-  )
-  ; (first
-  ;   (for [i (range 100 5000)
-  ;         :when (= 0 (mod i 17) (mod (+ 2 i) 13) (mod (+ 3 i) 19))]
-  ;     i))
-  ; (first
-  ;   (for [i (map inc (range))
-  ;         :let [t (- (* i 59) 4)]
-  ;         :when (and (= 0 (mod (+ 6 t) 31)) (= 0 (mod (+ t 7) 19)) (= 0 (mod (+ 1 t) 13)) (= 0 (mod t 7)) )
-  ;        ]
-  ;     t
-  ;   )
-  ; )
-  )
+  (let [{st :start bs :buses :as arg} (or m puzzle)
+        buses (->> (map vector (range) bs)
+                   (remove #(zero? (second %))))]
+    (loop [src buses
+           lcm 1
+           time 0]
+      (if (<= 2 (count src))
+        (let [[os bf] (first src)
+              [nos nbf] (second src)
+              nlcm (* lcm bf)
+              ntime (loop [t time]
+                      (if (pos? (mod (+ t nos) nbf))
+                        (recur (+ t nlcm))
+                        t))]
+          (recur (rest src) nlcm ntime))
+        {:lcm lcm :time time}))))
