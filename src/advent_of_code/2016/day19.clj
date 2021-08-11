@@ -1,7 +1,8 @@
 (ns advent-of-code.2016.day19
   "Nineteenth day's solutions for the Advent of Code 2016"
   (:require [clojure.java.io :as io]
-            [clojure.string :as cs])
+            [clojure.string :as cs]
+            [clojure.tools.logging :refer [error errorf info infof warnf debugf]])
   (:import [java.util ArrayList LinkedList]))
 
 (defn steal
@@ -22,12 +23,14 @@
     (loop [pos 0]
       (let [cnt (.size ply)
             idx (mod (+ pos (quot cnt 2)) cnt)
-            nxt (.remove ply (int idx))]
-        (prn pos idx nxt ply)
-        ; (if (= 0 (mod cnt 10000))
-        ;   (prn cnt (quot (System/currentTimeMillis) 1000)))
-        (if (< 2 cnt)
-          (recur (mod (inc pos) cnt))
+            nxt (.remove ply (int idx))
+            nsz (dec cnt)
+            np (if (< idx pos) pos (inc pos))]
+        ; (infof "pos: %d, idx: %d, nxt: %d, ply: %s" pos idx nxt (pr-str ply))
+        (if (= 0 (mod nsz 10000))
+          (infof "elves left in circle: %s" nsz))
+        (if (< 2 nsz)
+          (recur (mod np nsz))
           {:elf (first ply)})))))
 
 (defn one
@@ -39,11 +42,11 @@
         (recur nxt)
         nxt))))
 
-; (defn two
-;   "Function to see which elf gets all the presents on the 'take across' rules,
-;   and prints him out."
-;   []
-;   (cross (range 1 (inc 3014387))))
+(defn two
+  "Function to see which elf gets all the presents on the 'take across' rules,
+  and prints him out."
+  []
+  (cross (range 1 (inc 3014387))))
 
 (defn yoyo
   "Function to run the simple example in the puzzle to see that we have all the
