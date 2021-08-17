@@ -1,16 +1,18 @@
 (ns advent-of-code.2020.day18
   "Eighteenth day's solutions for the Advent of Code 2020"
-  (:require [advent-of-code.util :refer [parse-int trim split sum un-seq]]
+  (:require [advent-of-code.util :refer [parse-long trim split sum un-seq]]
             [clojure.string :as cs]
             [clojure.tools.logging :refer [error errorf info infof warnf debugf]]))
 
 (defn fix
-  "Function to put spaces around parems so they can be treated as separate
+  "Function to put spaces around parens so they can be treated as separate
   tokens in the parsing."
   [s]
   (-> s
       (cs/replace #"\(" " ( ")
       (cs/replace #"\)" " ) ")
+      (cs/replace #"\*" " * ")
+      (cs/replace #"\+" " + ")
       (split " ")
       (->> (remove empty?))))
 
@@ -30,8 +32,6 @@
        "5 * 9 * (7 * 3 * 3 + 9 * 3 + (8 + 6 * 4))"
        "((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2"]
       (->> (map fix))))
-
-(declare calc)
 
 (defn yank
   "Function to parse a value from the head of the list - be it a number or
@@ -54,7 +54,7 @@
                                  dpth)))
                            [(persistent! ans) []]))]
         [(cfn pars) mre])
-      [(parse-int ft) (rest coll)])))
+      [(parse-long ft) (rest coll)])))
 
 (defn calc
   "Function to take a sequence of tokens and evaluate them based on the
@@ -79,7 +79,29 @@
   [& [coll]]
   (sum (map calc puzzle)))
 
+(defn calc2
+  "Function to take a sequence of tokens and evaluate them based on the
+  rules of the puzzle - operator precedence is left-to-right, but
+  respecting parens."
+  [coll]
+  (loop [toks coll
+         acc nil
+         op nil
+         mre []]
+    (if-let [f (first toks)]
+      (cond
+        (= f "*") (recur (rest toks) nil nil (concat mre [acc "*"]))
+        (= f "+") (recur (rest toks) acc + mre)
+        (nil? op) (let [[v rts] (yank toks calc2)]
+                    (recur rts v nil mre))
+        :else (let [[v rts] (yank toks calc2)]
+                (recur rts (op acc v) nil mre)))
+      (if (not-empty mre)
+        (calc (concat mre [acc]))
+        acc))))
+
 (defn two
-  "Function to "
+  "Function to use the operator precedence of '+' over '*' and still use
+  left-to-right parsing."
   [& [coll]]
-  )
+  (sum (map calc2 puzzle)))
