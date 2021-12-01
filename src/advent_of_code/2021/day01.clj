@@ -3,7 +3,7 @@
   (:require [advent-of-code.util :refer [parse-int trim split]]))
 
 (def puzzle
-  "This is the input of the masses of the modules for the ship."
+  "This is the input of the depth readings out in front of the ship."
   (-> (slurp "resources/2021/input/day01.txt")
       (trim)
       (split #"\n")
