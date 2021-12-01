@@ -51,6 +51,15 @@ two concepts by beating on them - I'm a better coder because of it.
 The other days were not too bad, and while it took a few extra days to get
 Day 18 and Day 20, it was *_really_* worth it.
 
+## 2020
+
+I got stuck on Day 19, Day 20, and Day 23 - either because of computational
+complexity, or just lack of interest in solving the puzzle. The missing sea
+monster was a pattern matcher, and that's OK... but not exciting. And the
+large `n` problems are just not what I enjoy doing.
+
+The other days were not too bad.
+
 ## License
 
 Copyright © 2015-2019 Bob Beaty
