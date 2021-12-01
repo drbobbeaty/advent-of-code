@@ -14,7 +14,8 @@
   [199 200 208 210 200 207 240 269 260 263])
 
 (defn one
-  "Function to find "
+  "Function to find the number of depth increases in the provided data set,
+  or to default to the puzzle input if no argument is proviided."
   [& [coll]]
   (->> (partition 2 1 (or coll puzzle))
     (map (fn [[a b]] (< a b)))
@@ -22,7 +23,9 @@
     (count)))
 
 (defn two
-  "Function to find "
+  "Function to find the number of depth increases in the sliding 3-pt window
+  for the data. This prepares the data, and then calls `one` to compute the
+  drops."
   [& [coll]]
   (->> (partition 3 1 puzzle)
     (map #(apply + %))
