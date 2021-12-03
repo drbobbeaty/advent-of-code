@@ -301,6 +301,7 @@
     (nil? x) default
     (or (= "NA" x) (= "Inf" x) (= "Infinity" x)) Integer/MAX_VALUE
     (or (= "-Inf" x) (= "-Infinity" x)) Integer/MIN_VALUE
+    (char? x) (parse-int (str x))
     (string? x) (cond
                   (empty? x) default
                   (some #(not (is-int-char? %)) x) default
@@ -323,6 +324,7 @@
     (nil? x) default
     (or (= "NA" x) (= "Inf" x) (= "Infinity" x)) Long/MAX_VALUE
     (or (= "-Inf" x) (= "-Infinity" x)) Long/MIN_VALUE
+    (char? x) (parse-long (str x))
     (string? x) (cond
                   (empty? x) default
                   (some #(not (is-int-char? %)) x) default
@@ -346,6 +348,7 @@
     (nil? x) default
     (or (= "NA" x) (= "Inf" x) (= "Infinity" x)) Double/POSITIVE_INFINITY
     (or (= "-Inf" x) (= "-Infinity" x)) Double/NEGATIVE_INFINITY
+    (char? x) (parse-double (str x))
     (string? x) (cond
                   (empty? x) default
                   (some #(not (is-double-char? %)) x) default

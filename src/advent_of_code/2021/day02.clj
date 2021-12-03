@@ -17,9 +17,9 @@
 (def puzzle
   "This is the input of the planned course for the ship."
   (-> (slurp "resources/2021/input/day02.txt")
-      (trim)
-      (split #"\n")
-      (->> (map parse))))
+    (trim)
+    (split #"\n")
+    (->> (map parse))))
 
 (def test1
   "Test data for the first part."
@@ -29,7 +29,7 @@
        "up 3"
        "down 8"
        "forward 2"]
-      (->> (map parse))))
+    (->> (map parse))))
 
 (defn one
   "Function to find the final horizontal position and the final depth

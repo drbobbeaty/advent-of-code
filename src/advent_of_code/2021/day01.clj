@@ -5,9 +5,9 @@
 (def puzzle
   "This is the input of the depth readings out in front of the ship."
   (-> (slurp "resources/2021/input/day01.txt")
-      (trim)
-      (split #"\n")
-      (->> (map #(parse-int %)))))
+    (trim)
+    (split #"\n")
+    (->> (map #(parse-int %)))))
 
 (def test1
   "Test data for the first part."
