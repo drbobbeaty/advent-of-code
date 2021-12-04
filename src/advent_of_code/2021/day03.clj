@@ -1,6 +1,6 @@
 (ns advent-of-code.2021.day03
   "Third day's solutions for the Advent of Code 2021"
-  (:require [advent-of-code.util :refer [parse-int trim split sum]]
+  (:require [advent-of-code.util :refer [parse-int trim split sum transpose]]
             [clojure.tools.logging :refer [error errorf info infof warnf debugf]]))
 
 (def puzzle
@@ -25,14 +25,6 @@
        "00010"
        "01010"]
     (->> (map #(map parse-int (seq %))))))
-
-(defn transpose
-  "Function to take a sequence of sequences, each of the same length and
-  transpose the marix of values, turning rows into columns and returning
-  the result."
-  [coll]
-  (for [c (range (count (first coll)))]
-    (map #(nth % c) coll)))
 
 (defn to-dec
   "Function to take a sequence of binary digits and convert them into a

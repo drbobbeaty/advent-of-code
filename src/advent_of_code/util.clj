@@ -141,6 +141,14 @@
     (and (number? arg) (zero? arg)) nil
     :else arg))
 
+(defn transpose
+  "Function to take a sequence of sequences, each of the same length and
+  transpose the marix of values, turning rows into columns and returning
+  the result."
+  [coll]
+  (for [c (range (count (first coll)))]
+    (map #(nth % c) coll)))
+
 (defn update-keys
   "Like update (above), but operates on multiple keys at once. Note
   this is different from update-in (though they have the same argument
