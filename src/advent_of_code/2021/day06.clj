@@ -39,17 +39,9 @@
 (defn one
   "Function to find the number of lanternfish in the school after 80 days."
   [& [coll]]
-  (loop [fish puzzle
-         n 80]
-    (if (zero? n)
-      (sum fish)
-      (recur (day fish) (dec n)))))
+  (sum (first (drop 80 (iterate day puzzle)))))
 
 (defn two
   "Function to find the number of lanternfish in the school after 256 days."
   [& [coll]]
-  (loop [fish puzzle
-         n 256]
-    (if (zero? n)
-      (sum fish)
-      (recur (day fish) (dec n)))))
+  (sum (first (drop 256 (iterate day puzzle)))))
