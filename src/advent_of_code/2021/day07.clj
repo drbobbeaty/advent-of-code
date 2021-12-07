@@ -1,5 +1,5 @@
 (ns advent-of-code.2021.day07
-  "Sixth day's solutions for the Advent of Code 2021"
+  "Seventh day's solutions for the Advent of Code 2021"
   (:require [advent-of-code.util :refer [parse-int trim split sum median mean]]
             [clojure.math.numeric-tower :refer [abs]]
             [clojure.string :as cs]
