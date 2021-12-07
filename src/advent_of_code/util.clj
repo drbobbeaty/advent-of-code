@@ -394,6 +394,38 @@
       (reduce + (map sum (compact x)))
     :else x))
 
+(defn mean
+  "Function to calculate the mean of the collection, or a single value, and
+  this is just an extension of the sum function, as it's often nice to know
+  what the mean is."
+  [x]
+  (cond
+    (nil? x) 0
+    (string? x) (if (neg? (.indexOf x ".")) (parse-int x) (parse-double x))
+    (map? x) (mean (vals x))
+    (coll? x)
+      (let [pack (compact x)] (/ (sum pack) (count pack)))
+    :else x))
+
+(defn median
+  "Function to calculate the median of the collection, or a single value, and
+  this is just an extension of the sum function, as it's often nice to know
+  what the median is."
+  [x]
+  (cond
+    (nil? x) 0
+    (string? x) (if (neg? (.indexOf x ".")) (parse-int x) (parse-double x))
+    (map? x) (median (vals x))
+    (coll? x)
+      (let [pack (sort (compact x))
+            cnt (count pack)
+            mid (int (/ cnt 2))
+            ]
+        (if (zero? (mod cnt 2))
+          (/ (+ (nth pack mid) (nth pack (dec mid))) 2)
+          (nth pack mid)))
+    :else x))
+
 (defn factors
   "Function to return the prime factorization of the argument as a sequence."
   ([n]
