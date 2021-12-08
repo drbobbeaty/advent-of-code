@@ -11,15 +11,11 @@
   individual digits as order doesn't matter, and matching will be far easier
   this way."
   [s]
-  (let [[ds ov] (split (trim s) #"\|")
-        digs (-> (trim ds)
-               (split #" ")
-               (->> (map #(apply str (sort %))))
-               (as-> coll (into {} (for [d coll] [d nil]))))
-        out (-> (trim ov)
-              (split #" ")
-              (->> (map #(apply str (sort %)))))]
-    {:digits digs :output out}))
+  (let [chop (fn [a] (-> (trim a)
+                       (split #" ")
+                       (->> (map #(apply str (sort %))))))
+        [ds ov] (map chop (split (trim s) #"\|"))]
+    {:digits ds :output ov}))
 
 (def puzzle
   "This is the input of the digit sequences and output codes for the sub display"
@@ -68,9 +64,8 @@
   "Function to take a map of the garbled seven-segmment codes, and determine
   which is which digit by looking at the consistent representation of the
   data across all ten digits. It's really just simple pattern matching."
-  [m]
-  (let [ks (keys m)
-        zap (fn [f] (first (filter f ks)))
+  [coll]
+  (let [zap (fn [f] (first (filter f coll)))
         one (zap #(= 2 (count %)))
         four (zap #(= 4 (count %)))
         seven (zap #(= 3 (count %)))
