@@ -52,6 +52,16 @@
     (coll? s) (if (< 1 (count s)) s (first s))
     :else     s))
 
+(defn bindec
+  "Function to take a binary (1/0) sequence and turn it into a decimal number."
+  [bs]
+  (loop [bits (reverse bs)
+         base 1
+         sum 0]
+    (if-let [b (first bits)]
+      (recur (rest bits) (* 2 base) (+ sum (* base b)))
+      sum)))
+
 (defn- test-prime
   "Determine if a number is prime by looping through divisors"
   [x]
