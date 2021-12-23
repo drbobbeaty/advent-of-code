@@ -24,7 +24,8 @@
      :init (and (<= -50 xl xh 50) (<= -50 yl yh 50) (<= -50 zl zh 50))}))
 
 (def puzzle
-  "This is the input of the "
+  "This is the input of the reboot instructions for the reactor core, and
+  that's what we have to use to get online."
   (-> (slurp "resources/2021/input/day22.txt")
     (trim)
     (split #"\n")
