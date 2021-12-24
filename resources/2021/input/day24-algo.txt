@@ -1,0 +1,285 @@
+inp w        w <- digit 1
+mul x 0      \      x = 0
+add x z       \     x = z
+mod x 26       \    x = z % 26
+div z 1         \   z = z
+add x 13         \  x = (z % 26) + 13
+eql x w           \ x = 0 ... x will be > 9 and (max w) is 9
+eql x 0      x = 1 ... x was 0
+mul y 0      \      y = 0
+add y 25      \     y = 25
+mul y x        \    y = 1 * 25
+add y 1      y = 26
+mul z y      z = z * y
+mul y 0      \      y = 0
+add y w       \     y = w
+add y 6        \    y = w + 6        
+mul y x      y = x * (w + 6)        
+add z y      z = z + x * (w + 6) = (d1+6)
+
+inp w        w <- digit 2
+mul x 0      \      x = 0
+add x z       \     x = z
+mod x 26       \    x = z % 26
+div z 1         \   z = z
+add x 15         \  x = (z % 26) + 15
+eql x w           \ x = 0 ... x > 9, so never equal
+eql x 0      x = 1
+mul y 0      \      y = 0
+add y 25      \     y = 25
+mul y x        \    y = 1 * 25
+add y 1      y = 26
+mul z y      z = (d1 + 6) * 26
+mul y 0      \      y = 0
+add y w       \     y = w
+add y 7        \    y = w + 7         
+mul y x      y = x * (w + 7)           
+add z y      z = (d1+6)*26 + (d2+7) 
+
+inp w        w <- digit 3
+mul x 0      \      x = 0
+add x z       \     x = z
+mod x 26       \    x = z % 26
+div z 1         \   z = z
+add x 15         \  x = (z % 26) + 15
+eql x w           \ x = 0 ... too big to equal
+eql x 0      x = 1
+mul y 0      \      y = 0
+add y 25      \     y = 25
+mul y x        \    y = 1 * 25
+add y 1      y = 26
+mul z y      z = (d1+6)*26^2 + (d2+7)*26
+mul y 0      \      y = 0
+add y w       \     y = w
+add y 10       \    y = w + 10                  
+mul y x      y = 1 * (w + 10)             
+add z y      z = (d1+6)*26^2 + (d2+7)*26 + (d3+10)
+
+inp w        w <- digit 4
+mul x 0      \      x = 0
+add x z       \     x = z
+mod x 26       \    x = z % 26
+div z 1         \   z = z
+add x 11         \  x = (z % 26) + 11
+eql x w           \ x = 0
+eql x 0      x = 1
+mul y 0      \      y = 0
+add y 25      \     y = 25
+mul y x        \    y = 1 * 25
+add y 1      y = 26
+mul z y      z = (d1+6)*26^3 + (d2+7)*26^2 + (d3+10)*26
+mul y 0      \      y = 0
+add y w       \     y = w
+add y 2        \    y = w + 2                                   
+mul y x      y = x * (w + 2)             
+add z y      z = (d1+6)*26^3 + (d2+7)*26^2 + (d3+10)*26 + (d4+2)
+
+inp w        w <- digit 5
+mul x 0      \      x = 0
+add x z       \     x = z
+mod x 26     x = z % 26 = (d4+2)
+div z 26     z = z / 26 = (d1+6)*26^2 + (d2+7)*26 + (d3+10) 
+add x -7     \      x = (z % 26) - 7 = (d4+2-7) = (d4-5)
+eql x w       \     x = 1 if (d4-5) = d5, else 0
+eql x 0      x = 0 if (d4-5) = d5, else 1
+mul y 0      \      y = 0
+add y 25      \     y = 25
+mul y x        \    y = 25 if (d4-5) = d5, else 0
+add y 1      y = 26 if (d4-5) = d5, else 1
+mul z y      z = z*26 if (d4-5) = d5, else z
+mul y 0      \      y = 0
+add y w       \     y = w
+add y 15       \    y = w + 15 
+mul y x      y = 0 if (d4-5) = d5, else (d5 + 15)
+add z y      z = (d1+6)*26^2 + (d2+7)*26 + (d3+10) if (d4-5) = d5
+                 else (d1+6)*26^2 + (d2+7)*26 + (d3+10) + (d5+15)
+
+==== Assume: (d4-5) = d5 - we have to get z to zero
+
+inp w        w <- digit 6
+mul x 0      \      x = 0
+add x z       \     x = z
+mod x 26       \    x = z % 26 = (d3+10)
+div z 1         \   z = z
+add x 10         \  x = (z % 26) + 10 = (d3+20)
+eql x w           \ x = 0 => (d3+20) != d6
+eql x 0      x = 1
+mul y 0      \      y = 0
+add y 25      \     y = 25
+mul y x        \    y = 1 * 25 = 25
+add y 1      y = 26
+mul z y      z = (d1+6)*26^3 + (d2+7)*26^2 + (d3+10)*26
+mul y 0      \      y = 0
+add y w       \     y = w
+add y 8        \    y = w + 8
+mul y x      y = w + 8
+add z y      z = (d1+6)*26^3 + (d2+7)*26^2 + (d3+10)*26 + (d6+8)
+
+inp w        w <- digit 7
+mul x 0      \      x = 0
+add x z       \     x = z
+mod x 26       \    x = z % 26 = (d6+8)
+div z 1         \   z = z
+add x 10         \  x = (z % 26) + 10 = (d6+18)
+eql x w           \ x = 0 => (d6+18) != d7
+eql x 0      x = 1
+mul y 0      \      y = 0
+add y 25      \     y = 25
+mul y x        \    y = 1 * 25
+add y 1      y = 26
+mul z y      z = (d1+6)*26^4 + (d2+7)*26^3 + (d3+10)*26^2 + (d6+8)*26
+mul y 0      \      y = 0
+add y w       \     y = w
+add y 1        \    y = w + 1
+mul y x      y = w + 1
+add z y      z = (d1+6)*26^4 + (d2+7)*26^3 + (d3+10)*26^2 + (d6+8)*26 + (d7+1)
+
+inp w        w <- digit 8
+mul x 0      \      x = 0
+add x z       \     x = z
+mod x 26       \    x = z % 26 = (d7+1)
+div z 26     z = (d1+6)*26^3 + (d2+7)*26^2 + (d3+10)*26 + (d6+8)
+add x -5         \  x = (d7+1) - 5 = (d7-4)
+eql x w           \ x = 1 if (d7-4) = d8, else 0
+eql x 0      x = 0 if (d7-4) = d8, else 1
+mul y 0      \      y = 0
+add y 25      \     y = 25
+mul y x        \    y = 0 if (d7-4) = d8, else 25
+add y 1      y = 1 if (d7-4) = d8, else 26
+mul z y      z = (d1+6)*26^3 + (d2+7)*26^2 + (d3+10)*26 + (d6+8) if (d7-4) = d8, else (d1+6)*26^4 + (d2+7)*26^3 + (d3+10)*26^2 + (d6+8)*26
+mul y 0      y = 0
+add y w      y = w
+add y 10     y = w + 10
+mul y x      y = 0 if (d7-4) = d8, else (d8+10)
+add z y      z = (d1+6)*26^3 + (d2+7)*26^2 + (d3+10)*26 + (d6+8) if (d7-4) = d8,
+                 else (d1+6)*26^4 + (d2+7)*26^3 + (d3+10)*26^2 + (d6+8)*26 + (d8+10)
+
+==== Assume: (d7-4) = d8 - we have to get z to zero
+
+inp w        w <- digit 9
+mul x 0      \      x = 0
+add x z       \     x = z
+mod x 26       \    x = z % 26 = (d6+8)
+div z 1         \   z = z
+add x 15         \  x = (z % 26) + 15 = d6+8+15 = (d6+23)
+eql x w           \ x = 0 => (d6+23) != d9
+eql x 0      x = 1 => (d6+23) != d9
+mul y 0      \      y = 0
+add y 25      \     y = 25
+mul y x        \    y = 1 * 25
+add y 1      y = 26
+mul z y      z = (d1+6)*26^4 + (d2+7)*26^3 + (d3+10)*26^2 + (d6+8)*26
+mul y 0      y = 0
+add y w      y = w
+add y 5      y = w + 5
+mul y x      y = 1 * (w + 5)
+add z y      z = (d1+6)*26^4 + (d2+7)*26^3 + (d3+10)*26^2 + (d6+8)*26 + (d9+5)
+
+inp w        w <- digit 10
+mul x 0      \      x = 0
+add x z       \     x = z
+mod x 26       \    x = z % 26 = (d9+5)
+div z 26     z = (d1+6)*26^3 + (d2+7)*26^2 + (d3+10)*26^1 + (d6+8)
+add x -3         \  x = (d9+5) - 3 = (d9+2)
+eql x w           \ x = 1 if (d9+2) = d10, else 0
+eql x 0      x = 0 if (d9+2) = d10, else 1
+mul y 0      \      y = 0
+add y 25      \     y = 25
+mul y x        \    y = 0 if (d9+2) = d10, else 25
+add y 1      y = 1 if (d9+2) = d10, else 26
+mul z y      z = (d1+6)*26^3 + (d2+7)*26^2 + (d3+10)*26^1 + (d6+8) if (d9+2) = d10, else (d1+6)*26^4 + (d2+7)*26^3 + (d3+10)*26^2 + (d6+8)*26
+mul y 0      y = 0
+add y w      y = w
+add y 3      y = w + 3
+mul y x      y = 0 if (d9+2) = d10, else (d10+3)
+add z y      z = (d1+6)*26^3 + (d2+7)*26^2 + (d3+10)*26^1 + (d6+8) if (d9+2) = d10,
+                 else (d1+6)*26^4 + (d2+7)*26^3 + (d3+10)*26^2 + (d6+8)*26 + (d10+3)
+
+==== Assume: (d9+2) = d10 - we have to get z to zero
+
+inp w        w <- digit 11
+mul x 0      \      x = 0
+add x z       \     x = z
+mod x 26       \    x = z % 26 = (d6+8)
+div z 26     z = (d1+6)*26^2 + (d2+7)*26^1 + (d3+10)
+add x 0          \  x = (d6+8)
+eql x w           \ x = 1 if (d6+8) = d11, else 0
+eql x 0      x = 0 if (d6+8) = d11, else 1
+mul y 0      \      y = 0
+add y 25      \     y = 25
+mul y x        \    y = 0 if (d6+8) = d11, else 25
+add y 1      y = 1 if (d6+8) = d11, else 26
+mul z y      z = (d1+6)*26^2 + (d2+7)*26^1 + (d3+10) if (d6+8) = d11, else (d1+6)*26^3 + (d2+7)*26^2 + (d3+10)*26
+mul y 0      y = 0
+add y w      y = w
+add y 5      y = w + 5
+mul y x      y = 0 if (d6+8) = d11, else (d11+5)
+add z y      z = (d1+6)*26^2 + (d2+7)*26^1 + (d3+10) if (d6+8) = d11,
+                 else (d1+6)*26^3 + (d2+7)*26^2 + (d3+10)*26 + (d11+5)
+
+==== Assume: (d6+8) = d11 - we have to get z to zero
+
+inp w        w <- digit 12
+mul x 0      \      x = 0
+add x z       \     x = z
+mod x 26       \    x = (d3+10)
+div z 26     z = (d1+6)*26^1 + (d2+7)
+add x -5         \  x = (d3+10) - 5 = (d3+5)
+eql x w           \ x = 1 if (d3+5) = d12, else 0
+eql x 0      x = 0 if (d3+5) = d12, else 1
+mul y 0      \      y = 0
+add y 25      \     y = 25
+mul y x        \    y = 0 if (d3+5) = d12, else 25
+add y 1      y = 1 if (d3+5) = d12, else 26
+mul z y      z = (d1+6)*26^1 + (d2+7) if (d3+5) = d12, else (d1+6)*26^2 + (d2+7)*26
+mul y 0      y = 0
+add y w      y = w
+add y 11     y = w + 11
+mul y x      y = 0 if (d3+5) = d12, else (d12+11)
+add z y      z = (d1+6)*26^1 + (d2+7) if (d3+5) = d12,
+                 else (d1+6)*26^2 + (d2+7)*26 + (d12+11)
+
+==== Assume: (d3+5) = d12 - we have to get z to zero
+
+inp w        w <- digit 13
+mul x 0      \      x = 0
+add x z       \     x = z
+mod x 26       \    x = (d2+7)
+div z 26     z = (d1+6)
+add x -9         \  x = (d2+7) - 9 = (d2-2)
+eql x w           \ x = 1 if (d2-2) = d13, else 0
+eql x 0      x = 0 if (d2-2) = d13, else 1
+mul y 0      \      y = 0
+add y 25      \     y = 25
+mul y x        \    y = 0 if (d2-2) = d13, else 25
+add y 1      y = 1 if (d2-2) = d13, else 26
+mul z y      z = (d1+6) if (d2-2) = d13, else (d1+6)*26
+mul y 0      y = 0
+add y w      y = w
+add y 12     y = w + 12
+mul y x      y = 0 if (d2-2) = d13, else (d13+12)
+add z y      z = (d1+6) if (d2-2) = d13, else (d1+6)*26 + (d13+12)
+
+==== Assume: (d2-2) = d13 - we have to get z to zero
+
+inp w        w <- digit 14
+mul x 0      \      x = 0
+add x z       \     x = z
+mod x 26       \    x = z % 26 = (d1+6)
+div z 26     z = 0
+add x 0          \  x = (d1+6)
+eql x w           \ x = 1 if (d1+6) = d14, else 0
+eql x 0      x = 0 if (d1+6) = d14, else 1
+mul y 0      \      y = 0
+add y 25      \     y = 25
+mul y x        \    y = 0 if (d1+6) = d14, else 25
+add y 1      y = 1 if (d1+6) = d14, else 26
+mul z y      z = 0
+mul y 0      y = 0
+add y w      y = w
+add y 10     y = w + 10
+mul y x      y = 0 if (d1+6) = d14, else (d14+10)
+add z y      z = 0 if (d1+6) = d14, else (d14+10)
+
+==== Assume: (d1+6) = d14 - we have to get z to zero
+
