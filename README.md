@@ -60,6 +60,18 @@ large `n` problems are just not what I enjoy doing.
 
 The other days were not too bad.
 
+## 2021
+
+This was an interesting year, as there were two days: Day 21 and 22, that
+were computationally intensive if you tried to brute force them. They took
+clever thought, and then they cracked. And Day 23 was simpler to solve by hand
+than to try and code it up. And Day 24 was really a disassembly problem that
+lead to what the code was doing. Then the solution was very simple - so on
+Days 23 and 24, not a lot of _coding_, but that's OK - they would have been
+horrible to try and code up, or execute.
+
+But this year it was 25 Days in 25 days. Very fun.
+
 ## License
 
 Copyright © 2015-2019 Bob Beaty
