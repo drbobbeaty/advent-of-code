@@ -21,8 +21,7 @@
 (defn one
   "Function to find the maximum number of calories any one elf is carying."
   [& [coll]]
-  (apply max (map sum puzzle))
-)
+  (apply max (map sum puzzle)))
 
 (defn two
   "Function to find total claories carried by the topw three elves."
