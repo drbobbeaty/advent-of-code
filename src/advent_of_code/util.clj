@@ -14,6 +14,10 @@
 (def ascii-0 (int \0))
 (def ascii-9 (int \9))
 (def ascii-punct #{ \( \) \. \; })
+(def ascii-a (int \a))
+(def ascii-A (int \A))
+(def ascii-z (int \z))
+(def ascii-Z (int \Z))
 
 (defn rev
   "Function to do a simple reverse sort versus `compare`. This is for a simple
